@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Unloading area</string>
+    <string name="password">Пароль</string>
+    <string name="login">Логин</string>
+    <string name="sign_in">Войти</string>
+    <string name="version">Версия %1$s</string>
+</resources>
