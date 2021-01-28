@@ -17,6 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kz.kazpost.unloadingarea.BuildConfig
 import kz.kazpost.unloadingarea.R
 import kz.kazpost.unloadingarea.databinding.FragmentAuthBinding
+import kz.kazpost.unloadingarea.util.EventObserver
 import kz.kazpost.unloadingarea.util.connectToLoadingViewModel
 import javax.inject.Inject
 
@@ -53,14 +54,14 @@ class AuthFragment : Fragment() {
     }
 
     private fun initObservers() {
-        viewModel.authResultLiveData.observe(viewLifecycleOwner) {
-            if (it == true) {
+        viewModel.authResultLiveData.observe(viewLifecycleOwner, EventObserver{
+            if (it) {
                 binding.bSignIn.loadingSuccessful()
-
+                navController.navigate(AuthFragmentDirections.actionAuthFragmentToTransportFragment())
             } else {
                 binding.bSignIn.loadingFailed()
             }
-        }
+        })
     }
 
     private fun initViews() {

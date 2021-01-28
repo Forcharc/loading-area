@@ -6,8 +6,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kz.kazpost.unloadingarea.api.AuthApi
-import kz.kazpost.unloadingarea.api.requests.AuthRequest
-import kz.kazpost.unloadingarea.api.responses.AuthResponse
+import kz.kazpost.unloadingarea.data.requests.AuthRequest
 import kz.kazpost.unloadingarea.util.transform
 import retrofit2.Response
 import javax.inject.Inject

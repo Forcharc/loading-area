@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="@dimen/indent_medium" />
+
+        <TextView
+            android:id="@+id/tv_t_invoice_number"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/indent_medium"
+            android:layout_marginEnd="@dimen/indent_medium"
+            android:layout_marginRight="@dimen/indent_medium"
+            app:layout_constraintEnd_toStartOf="@id/b_operations"
+            app:layout_constraintStart_toEndOf="@id/guideline_start"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="T202383763876" />
+
+        <TextView
+            android:id="@+id/tv_passage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/indent_small"
+            android:layout_marginEnd="@dimen/indent_medium"
+            android:layout_marginRight="@dimen/indent_medium"
+            app:layout_constraintEnd_toStartOf="@id/b_operations"
+            app:layout_constraintStart_toEndOf="@id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@id/tv_t_invoice_number"
+            tools:text="Рейс АСТ-АЛМТ" />
+
+        <TextView
+            android:id="@+id/tv_type"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/indent_small"
+            android:layout_marginEnd="@dimen/indent_medium"
+            android:layout_marginRight="@dimen/indent_medium"
+            android:layout_marginBottom="@dimen/indent_medium"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/b_operations"
+            app:layout_constraintStart_toEndOf="@id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@id/tv_passage"
+            tools:text="Авто" />
+
+        <Button
+            android:id="@+id/b_operations"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/indent_medium"
+            android:layout_marginRight="@dimen/indent_medium"
+            android:text="@string/operations"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

@@ -1,7 +1,18 @@
 <resources>
-    <string name="app_name">Unloading area</string>
+    <string name="app_name">Зона отгрузки</string>
     <string name="password">Пароль</string>
     <string name="login">Логин</string>
     <string name="sign_in">Войти</string>
     <string name="version">Версия %1$s</string>
+    <string name="operations">Операции</string>
+    <string name="passage">Рейс %1$s - %2$s</string>
+    <string name="addSInvoice">Добавить S</string>
+    <string name="deleteSInvoice">Удалить S</string>
+    <string name="load">Погрузка</string>
+
+    <string-array name="operations">
+        <item>Добавить S</item>
+        <item>Удалить S</item>
+        <item>Погрузка</item>
+    </string-array>
 </resources>

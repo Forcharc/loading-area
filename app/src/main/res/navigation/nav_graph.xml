@@ -9,7 +9,16 @@
         android:id="@+id/authFragment"
         android:name="kz.kazpost.unloadingarea.ui.AuthFragment"
         tools:layout="@layout/fragment_auth"
-        android:label="Авторизация" />
+        android:label="Авторизация" >
+        <action
+            android:id="@+id/action_authFragment_to_transportFragment"
+            app:destination="@id/transportFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/transportFragment"
+        android:name="kz.kazpost.unloadingarea.ui.TransportFragment"
+        android:label="TransportFragment" />
 
 
 </navigation>

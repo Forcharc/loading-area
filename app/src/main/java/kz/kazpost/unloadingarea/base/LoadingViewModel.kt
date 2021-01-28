@@ -5,14 +5,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import kotlinx.coroutines.flow.*
+import kz.kazpost.unloadingarea.util.EventWrapper
 import retrofit2.Response
 
 open class LoadingViewModel : ViewModel() {
     private val _isLoadingLiveData = MutableLiveData<LoadingStatus>()
     val isLoadingLiveData: LiveData<LoadingStatus> = _isLoadingLiveData
 
-    private val _errorLiveData = MutableLiveData<String>()
-    val errorLiveData: LiveData<String> = _errorLiveData
+    private val _errorLiveData = MutableLiveData<EventWrapper<String>>()
+    val errorLiveData: LiveData<EventWrapper<String>> = _errorLiveData
 
     enum class LoadingStatus {
         LOADING(),
@@ -22,7 +23,7 @@ open class LoadingViewModel : ViewModel() {
     protected fun <T> loadFlow(
         flow: Flow<Response<T>>,
         loadingStatusReceivingLiveData: MutableLiveData<LoadingStatus> = _isLoadingLiveData,
-        errorReceivingLiveData: MutableLiveData<String> = _errorLiveData
+        errorReceivingLiveData: MutableLiveData<EventWrapper<String>> = _errorLiveData
     ): LiveData<T?> {
         return flow
             .onStart {
@@ -37,7 +38,7 @@ open class LoadingViewModel : ViewModel() {
             }
             .catch {
                 emit(null)
-                errorReceivingLiveData.postValue(it.localizedMessage)
+                errorReceivingLiveData.postValue(EventWrapper(it.localizedMessage))
             }
             .onCompletion {
                 loadingStatusReceivingLiveData.postValue(LoadingStatus.NOT_LOADING)

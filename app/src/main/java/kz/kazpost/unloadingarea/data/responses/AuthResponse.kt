@@ -1,6 +1,5 @@
-package kz.kazpost.unloadingarea.api.responses
+package kz.kazpost.unloadingarea.data.responses
 
-import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
 data class AuthResponse(
