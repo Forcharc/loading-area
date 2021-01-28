@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Зона отгрузки</string>
+    <string name="app_name">Зона погрузки</string>
     <string name="password">Пароль</string>
     <string name="login">Логин</string>
     <string name="sign_in">Войти</string>

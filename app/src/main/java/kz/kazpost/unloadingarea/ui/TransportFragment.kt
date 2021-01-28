@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import kz.kazpost.unloadingarea.R
+import kz.kazpost.unloadingarea.base.LoadingViewModel.Companion.connectToLoadingViewModel
 import kz.kazpost.unloadingarea.databinding.FragmentTransportsBinding
 import kz.kazpost.unloadingarea.ui.adapters.TransportAdapter
 import kz.kazpost.unloadingarea.util.RecyclerViewItemMarginsDecoration
@@ -41,11 +42,13 @@ class TransportFragment : Fragment() {
         initObservers()
 
         viewModel.loadTransportList()
+
+        connectToLoadingViewModel(viewModel)
     }
 
     private fun initObservers() {
         viewModel.transportLiveData.observe(viewLifecycleOwner) {
-            transportAdapter.submitList(it)
+            if (it != null) transportAdapter.submitList(it)
         }
     }
 

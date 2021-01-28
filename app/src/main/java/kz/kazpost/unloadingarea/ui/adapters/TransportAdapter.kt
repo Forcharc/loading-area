@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.ListPopupWindow.MATCH_PARENT
+import android.widget.ListPopupWindow.WRAP_CONTENT
 import androidx.appcompat.widget.ListPopupWindow
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil.ItemCallback
@@ -55,7 +57,7 @@ class TransportAdapter : RecyclerView.Adapter<TransportAdapter.TransportViewHold
             val popupWindow = ListPopupWindow(context)
             val popupAdapter = ArrayAdapter(
                 context,
-                android.R.layout.simple_spinner_item,
+                android.R.layout.simple_spinner_dropdown_item,
                 context.resources.getStringArray(R.array.operations)
             )
             popupWindow.setOnItemClickListener { _, _, position, _ ->
@@ -72,6 +74,7 @@ class TransportAdapter : RecyclerView.Adapter<TransportAdapter.TransportViewHold
                 }
             }
             popupWindow.anchorView = anchor
+            popupWindow.width = MATCH_PARENT
             popupWindow.setAdapter(popupAdapter)
             popupWindow.show()
         }

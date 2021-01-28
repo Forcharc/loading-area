@@ -16,9 +16,10 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.android.AndroidEntryPoint
 import kz.kazpost.unloadingarea.BuildConfig
 import kz.kazpost.unloadingarea.R
+import kz.kazpost.unloadingarea.base.LoadingViewModel
+import kz.kazpost.unloadingarea.base.LoadingViewModel.Companion.connectToLoadingViewModel
 import kz.kazpost.unloadingarea.databinding.FragmentAuthBinding
 import kz.kazpost.unloadingarea.util.EventObserver
-import kz.kazpost.unloadingarea.util.connectToLoadingViewModel
 import javax.inject.Inject
 
 @AndroidEntryPoint

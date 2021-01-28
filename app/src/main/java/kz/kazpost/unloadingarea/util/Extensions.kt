@@ -34,58 +34,7 @@ fun Context.dpToPx(dp: Float): Float {
     )
 }
 
-fun Fragment.connectToLoadingViewModel(
-    viewModel: LoadingViewModel,
-    onLoading: (Boolean) -> Unit = { isLoading ->
-        updateProgressIndicator(isLoading)
-    }
-) {
-    viewModel.errorLiveData.observe(viewLifecycleOwner, EventObserver {
-        Snackbar.make(requireView(), it, Snackbar.LENGTH_LONG).show()
-    })
-    viewModel.isLoadingLiveData.observe(viewLifecycleOwner) {
-        onLoading(it == LoadingViewModel.LoadingStatus.LOADING)
-    }
-}
 
 fun View.showSnackShort(text: String) {
     Snackbar.make(this, text, Snackbar.LENGTH_SHORT).show()
-}
-
-private fun Fragment.updateProgressIndicator(isLoading: Boolean) {
-    // Just random
-    val progressIndicatorId: Int = 495391569
-
-    val root = requireView() as ConstraintLayout
-    val progressIndicator: LinearProgressIndicator? = root.findViewById(progressIndicatorId)
-    if (isLoading) {
-        if (requireView() is ConstraintLayout) {
-            if (progressIndicator == null) {
-                createProgressIndicator(progressIndicatorId, root)
-            } else {
-                progressIndicator.isVisible = true
-            }
-        }
-    } else {
-        progressIndicator?.isGone = true
-    }
-}
-
-private fun Fragment.createProgressIndicator(
-    loadingViewId: Int,
-    root: ConstraintLayout
-) {
-    val progressIndicator = LinearProgressIndicator(requireContext())
-    progressIndicator.isIndeterminate = true
-    progressIndicator.id = loadingViewId
-    root.addView(progressIndicator, MATCH_PARENT, WRAP_CONTENT)
-    val constraints = ConstraintSet()
-    constraints.clone(root)
-    constraints.connect(
-        progressIndicator.id,
-        ConstraintSet.TOP,
-        root.id,
-        ConstraintSet.TOP
-    )
-    constraints.applyTo(root)
 }
