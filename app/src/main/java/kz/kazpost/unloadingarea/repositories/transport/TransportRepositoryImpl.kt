@@ -5,9 +5,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kz.kazpost.unloadingarea.data.mappers.ResponseToModelMappers
 import kz.kazpost.unloadingarea.ui.transport.TransportModel
 import kz.kazpost.unloadingarea.database.UserPreferences
+import kz.kazpost.unloadingarea.repositories.transport.models.Mappers
 import kz.kazpost.unloadingarea.ui.transport.TransportRepository
 import kz.kazpost.unloadingarea.util.extentions.transform
 import okhttp3.ResponseBody
@@ -41,7 +41,7 @@ class TransportRepositoryImpl @Inject constructor(
             )
         }.map { response ->
             response.transform {
-                ResponseToModelMappers.transportListResponseToTransportModelList(it!!)
+                Mappers.transportListResponseToTransportModelList(userDepartmentId, it!!)
             }
         }.flowOn(Dispatchers.IO)
     }

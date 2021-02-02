@@ -127,14 +127,15 @@ class TransportFragment : Fragment(), TransportAdapter.TransportActionListener {
     }
 
     override fun onTransportAction(
-        tInvoiceNumber: String,
+        transportModel: TransportModel,
         actionType: TransportAdapter.TransportActionType
     ) {
         when (actionType) {
             TransportAdapter.TransportActionType.ADD_S_INVOICE -> {
                 navController.navigate(
                     TransportFragmentDirections.actionTransportFragmentToAddSInvoiceFragment(
-                        tInvoiceNumber
+                        transportModel.tInvoiceNumber,
+                        transportModel.notYetVisitedDepartments.toTypedArray()
                     )
                 )
             }

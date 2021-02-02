@@ -32,6 +32,9 @@
         <argument
             android:name="tInvoiceNumber"
             app:argType="string" />
+        <argument
+            android:name="notYetVisitedDepartments"
+            app:argType="string[]" />
     </fragment>
 
 

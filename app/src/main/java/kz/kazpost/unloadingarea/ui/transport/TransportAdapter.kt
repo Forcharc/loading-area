@@ -37,7 +37,7 @@ class TransportAdapter(private val transportActionListener: TransportActionListe
     inner class TransportViewHolder(private val binding: ItemTransportBinding) :
         RecyclerView.ViewHolder(binding.root) {
         private val context = binding.root.context
-        private var currentTInvoiceNumber: String? = null
+        private var currentTInvoice: TransportModel? = null
 
         init {
             binding.bOperations.setOnClickListener { buttonView ->
@@ -46,7 +46,7 @@ class TransportAdapter(private val transportActionListener: TransportActionListe
         }
 
         fun bind(transportModel: TransportModel) {
-            currentTInvoiceNumber = transportModel.tInvoiceNumber
+            currentTInvoice = transportModel
 
             binding.tvTInvoiceNumber.text = transportModel.tInvoiceNumber
             binding.tvPassage.text =
@@ -62,23 +62,23 @@ class TransportAdapter(private val transportActionListener: TransportActionListe
                 context.resources.getStringArray(R.array.operations)
             )
             popupWindow.setOnItemClickListener { _, _, position, _ ->
-                currentTInvoiceNumber?.let { tInvoiceNumber ->
+                currentTInvoice?.let { tInvoice ->
                     when (position) {
                         0 -> {
                             transportActionListener.onTransportAction(
-                                tInvoiceNumber,
+                                tInvoice,
                                 TransportActionType.ADD_S_INVOICE
                             )
                         }
                         1 -> {
                             transportActionListener.onTransportAction(
-                                tInvoiceNumber,
+                                tInvoice,
                                 TransportActionType.REMOVE_S_INVOICE
                             )
                         }
                         2 -> {
                             transportActionListener.onTransportAction(
-                                tInvoiceNumber,
+                                tInvoice,
                                 TransportActionType.LOAD_TRANSPORT
                             )
                         }
@@ -94,7 +94,7 @@ class TransportAdapter(private val transportActionListener: TransportActionListe
     }
 
     interface TransportActionListener {
-        fun onTransportAction(tInvoiceNumber: String, actionType: TransportActionType)
+        fun onTransportAction(transportModel: TransportModel, actionType: TransportActionType)
     }
 
     enum class TransportActionType {
