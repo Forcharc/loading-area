@@ -9,15 +9,15 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kz.kazpost.unloadingarea.database.PREFERENCES_FILE_KEY
-import kz.kazpost.unloadingarea.database.Preferences
-import kz.kazpost.unloadingarea.database.PreferencesImpl
+import kz.kazpost.unloadingarea.database.UserPreferences
+import kz.kazpost.unloadingarea.database.UserPreferencesImpl
 import javax.inject.Singleton
 
 @Module
 @InstallIn(ApplicationComponent::class)
 abstract  class PreferencesModule {
     @Binds
-    abstract fun bindPreferences(prefImpl: PreferencesImpl): Preferences
+    abstract fun bindPreferences(prefImpl: UserPreferencesImpl): UserPreferences
 
 
     companion object {

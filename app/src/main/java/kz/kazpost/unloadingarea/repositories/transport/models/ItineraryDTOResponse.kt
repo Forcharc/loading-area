@@ -1,8 +1,8 @@
-package kz.kazpost.unloadingarea.api.responses
+package kz.kazpost.unloadingarea.repositories.transport.models
 
 import com.google.gson.annotations.SerializedName
 
-data class ItineraryDTO(
+data class ItineraryDTOResponse(
 
     @field:SerializedName("itineraryType")
 	val itineraryType: String? = null,

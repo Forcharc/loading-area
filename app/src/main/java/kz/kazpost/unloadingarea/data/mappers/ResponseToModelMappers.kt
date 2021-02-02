@@ -1,7 +1,7 @@
 package kz.kazpost.unloadingarea.data.mappers
 
 import kz.kazpost.unloadingarea.ui.transport.TransportModel
-import kz.kazpost.unloadingarea.api.responses.TransportListResponse
+import kz.kazpost.unloadingarea.repositories.transport.models.TransportListResponse
 import kz.kazpost.unloadingarea.util.StringConstants
 
 object ResponseToModelMappers {

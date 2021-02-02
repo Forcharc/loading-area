@@ -7,8 +7,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import kz.kazpost.unloadingarea.BuildConfig
-import kz.kazpost.unloadingarea.api.AuthApi
-import kz.kazpost.unloadingarea.api.TransportApi
+import kz.kazpost.unloadingarea.repositories.auth.AuthApi
+import kz.kazpost.unloadingarea.repositories.add_s_invoice.SInvoiceApi
+import kz.kazpost.unloadingarea.repositories.transport.TransportApi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -25,17 +26,7 @@ import kotlin.jvm.Throws
 
 @Module
 @InstallIn(ApplicationComponent::class)
-class ApiModule {
-
-    @Provides
-    fun provideAuthApi(retrofit: Retrofit): AuthApi {
-        return retrofit.create(AuthApi::class.java)
-    }
-
-    @Provides
-    fun provideTransportApi(retrofit: Retrofit): TransportApi {
-        return retrofit.create(TransportApi::class.java)
-    }
+class RetrofitModule {
 
     @Singleton
     @Provides

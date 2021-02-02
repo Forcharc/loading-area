@@ -1,13 +1,12 @@
-package kz.kazpost.unloadingarea.repositories
+package kz.kazpost.unloadingarea.repositories.auth
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kz.kazpost.unloadingarea.api.AuthApi
-import kz.kazpost.unloadingarea.api.requests.AuthRequest
-import kz.kazpost.unloadingarea.database.Preferences
+import kz.kazpost.unloadingarea.database.UserPreferences
+import kz.kazpost.unloadingarea.repositories.auth.models.AuthRequest
 import kz.kazpost.unloadingarea.ui.auth.AuthRepository
 import kz.kazpost.unloadingarea.util.extentions.transform
 import retrofit2.Response
@@ -15,7 +14,7 @@ import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val api: AuthApi,
-    private val prefs: Preferences
+    private val prefs: UserPreferences
 ): AuthRepository {
 
     override fun authorizeUser(login: String, password: String): Flow<Response<Boolean>> {

@@ -1,12 +1,11 @@
 package kz.kazpost.unloadingarea.database
 
-import android.content.Context
 import android.content.SharedPreferences
 import javax.inject.Inject
 
 const val PREFERENCES_FILE_KEY = "kz.kazpost.unloadingarea.preferences"
 
-class PreferencesImpl @Inject constructor(private val prefs: SharedPreferences) : Preferences {
+class UserPreferencesImpl @Inject constructor(private val prefs: SharedPreferences) : UserPreferences {
 
     override var userLogin: String?
         get() = prefs.getString(KEY_LOGIN, null)

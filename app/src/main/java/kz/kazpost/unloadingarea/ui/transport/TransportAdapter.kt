@@ -1,4 +1,4 @@
-package kz.kazpost.unloadingarea.ui.adapters
+package kz.kazpost.unloadingarea.ui.transport
 
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.DiffUtil.ItemCallback
 import androidx.recyclerview.widget.RecyclerView
 import kz.kazpost.unloadingarea.R
 import kz.kazpost.unloadingarea.databinding.ItemTransportBinding
-import kz.kazpost.unloadingarea.ui.transport.TransportModel
 
 class TransportAdapter(private val transportActionListener: TransportActionListener) :
     RecyclerView.Adapter<TransportAdapter.TransportViewHolder>() {

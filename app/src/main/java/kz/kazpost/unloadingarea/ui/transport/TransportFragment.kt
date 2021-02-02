@@ -17,7 +17,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kz.kazpost.unloadingarea.R
 import kz.kazpost.unloadingarea.base.LoadingViewModel.Companion.connectToLoadingViewModel
 import kz.kazpost.unloadingarea.databinding.FragmentTransportBinding
-import kz.kazpost.unloadingarea.ui.adapters.TransportAdapter
 import kz.kazpost.unloadingarea.util.RecyclerViewItemMarginsDecoration
 import kz.kazpost.unloadingarea.util.extentions.showSnackShort
 

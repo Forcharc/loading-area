@@ -1,4 +1,4 @@
-package kz.kazpost.unloadingarea.ui.adapters
+package kz.kazpost.unloadingarea.ui.add_s_invoice
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import kz.kazpost.unloadingarea.R
 import kz.kazpost.unloadingarea.databinding.ItemSInvoiceBinding
-import kz.kazpost.unloadingarea.ui.add_s_invoice.SInvoiceModel
 
 class SInvoiceAdapter : RecyclerView.Adapter<SInvoiceAdapter.SInvoiceViewHolder>() {
     private val listDiffer = AsyncListDiffer(this, SInvoiceCallback())

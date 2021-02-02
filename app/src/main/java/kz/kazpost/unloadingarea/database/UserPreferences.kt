@@ -1,6 +1,6 @@
 package kz.kazpost.unloadingarea.database
 
-interface Preferences {
+interface UserPreferences {
     var userLogin: String?
     var userPassword: String?
     var userDepartmentId: String?

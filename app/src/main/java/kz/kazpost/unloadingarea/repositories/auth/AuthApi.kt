@@ -1,7 +1,7 @@
-package kz.kazpost.unloadingarea.api
+package kz.kazpost.unloadingarea.repositories.auth
 
-import kz.kazpost.unloadingarea.api.requests.AuthRequest
-import kz.kazpost.unloadingarea.api.responses.AuthResponse
+import kz.kazpost.unloadingarea.repositories.auth.models.AuthRequest
+import kz.kazpost.unloadingarea.repositories.auth.models.AuthResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Headers
