@@ -9,6 +9,14 @@
     <string name="addSInvoice">Добавить S</string>
     <string name="deleteSInvoice">Удалить S</string>
     <string name="load">Погрузка</string>
+    <string name="no_data">Данные отсутствуют</string>
+    <string name="number">Номер</string>
+    <string name="destination">Место назначения</string>
+    <string name="bag_amount">Кол-во мешков</string>
+    <string name="parcel_amount">Кол-во посылок</string>
+    <string name="add">Добавить</string>
+    <string name="cancel">Отмена</string>
+    <string name="retry">Повторить</string>
 
     <string-array name="operations">
         <item>Добавить S</item>

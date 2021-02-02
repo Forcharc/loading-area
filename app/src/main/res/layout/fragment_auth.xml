@@ -27,6 +27,7 @@
             android:drawableStart="@drawable/ic_login"
             android:drawablePadding="10dp"
             android:hint="@string/login"
+            android:singleLine="true"
             android:maxLines="1"
             android:drawableLeft="@drawable/ic_login" />
 

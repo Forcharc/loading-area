@@ -1,12 +1,10 @@
-package kz.kazpost.unloadingarea.ui
+package kz.kazpost.unloadingarea.ui.auth
 
 import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.switchMap
 import kz.kazpost.unloadingarea.base.LoadingViewModel
-import kz.kazpost.unloadingarea.repositories.AuthRepository
 import kz.kazpost.unloadingarea.util.EventWrapper
 
 class AuthViewModel @ViewModelInject constructor(
@@ -19,9 +17,21 @@ class AuthViewModel @ViewModelInject constructor(
     private var login: String = ""
     private var password: String = ""
 
+    fun init() {
+        tryToRestoreAuthorization()
+    }
+
+    private fun tryToRestoreAuthorization() {
+        val (login, password) = repository.getUserLoginAndPassword()
+        if (!login.isNullOrBlank() && !password.isNullOrBlank()) {
+            this.login = login
+            this.password = password
+            authorize()
+        }
+    }
 
     fun authorize() {
-        val resultLiveData = loadFlow(repository.authorize(login, password))
+        val resultLiveData = loadFlow(repository.authorizeUser(login, password))
         _authResultLiveData.addSource(resultLiveData) {
             Log.d(TAG, "authorize: $it")
             _authResultLiveData.postValue(EventWrapper(it == true))

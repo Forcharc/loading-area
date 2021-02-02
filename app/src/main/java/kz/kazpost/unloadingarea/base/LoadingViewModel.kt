@@ -6,33 +6,39 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.*
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.*
+import kz.kazpost.unloadingarea.R
 import kz.kazpost.unloadingarea.util.EventObserver
 import kz.kazpost.unloadingarea.util.EventWrapper
+import kz.kazpost.unloadingarea.util.extentions.clickToDismissMode
+import kz.kazpost.unloadingarea.util.extentions.makeBaseSnackBar
 import retrofit2.Response
 
 open class LoadingViewModel : ViewModel() {
     private val _isLoadingLiveData = MutableLiveData<LoadingStatus>()
     val isLoadingLiveData: LiveData<LoadingStatus> = _isLoadingLiveData
 
-    private val _errorLiveData = MutableLiveData<EventWrapper<String>>()
-    val errorLiveData: LiveData<EventWrapper<String>> = _errorLiveData
+    private val _errorLiveData = MutableLiveData<EventWrapper<ErrorMessageWithRetryAction>>()
+    val errorLiveData: LiveData<EventWrapper<ErrorMessageWithRetryAction>> = _errorLiveData
 
     enum class LoadingStatus {
         LOADING(),
         NOT_LOADING()
     }
 
+    data class ErrorMessageWithRetryAction(
+        val errorMessage: String,
+        val retryAction: (() -> Unit)?
+    )
+
     protected fun <T> loadFlow(
         flow: Flow<Response<T>>,
+        onRetry: (() -> Unit)? = null,
         loadingStatusReceivingLiveData: MutableLiveData<LoadingStatus> = _isLoadingLiveData,
-        errorReceivingLiveData: MutableLiveData<EventWrapper<String>> = _errorLiveData
+        errorReceivingLiveData: MutableLiveData<EventWrapper<ErrorMessageWithRetryAction>> = _errorLiveData
     ): LiveData<T?> {
         return flow
             .onStart {
@@ -47,7 +53,7 @@ open class LoadingViewModel : ViewModel() {
             }
             .catch {
                 emit(null)
-                errorReceivingLiveData.postValue(EventWrapper(it.localizedMessage))
+                errorReceivingLiveData.postValue(EventWrapper(ErrorMessageWithRetryAction(it.localizedMessage ?: "Unknown error", onRetry)))
             }
             .onCompletion {
                 loadingStatusReceivingLiveData.postValue(LoadingStatus.NOT_LOADING)
@@ -57,6 +63,14 @@ open class LoadingViewModel : ViewModel() {
 
 
     companion object {
+
+        fun <T> MediatorLiveData<T>.observeFirstValueFromLiveDataAndUnsubscribe(observeFrom: LiveData<T?>) {
+            addSource(observeFrom) {
+                postValue(it)
+                removeSource(observeFrom)
+            }
+        }
+
         fun Fragment.connectToLoadingViewModel(
             viewModel: LoadingViewModel,
             onLoading: (Boolean) -> Unit = { isLoading ->
@@ -64,11 +78,31 @@ open class LoadingViewModel : ViewModel() {
             }
         ) {
             viewModel.errorLiveData.observe(viewLifecycleOwner, EventObserver {
-                Snackbar.make(requireView(), it, Snackbar.LENGTH_LONG).show()
+                showLoadingErrorSnackBar(it.errorMessage, it.retryAction)
             })
             viewModel.isLoadingLiveData.observe(viewLifecycleOwner) {
                 onLoading(it == LoadingStatus.LOADING)
             }
+        }
+
+        private fun Fragment.showLoadingErrorSnackBar(
+            errorMessage: String,
+            retryAction: (() -> Unit)?
+        ) {
+            val snackbar = Snackbar.make(
+                requireView(),
+                errorMessage,
+                Snackbar.LENGTH_LONG
+            ).makeBaseSnackBar().clickToDismissMode()
+
+
+            retryAction?.let { retryAction ->
+                snackbar.duration = Snackbar.LENGTH_INDEFINITE
+                snackbar.setAction(R.string.retry) { _ ->
+                    retryAction()
+                }
+            }
+            snackbar.show()
         }
 
 

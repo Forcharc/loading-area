@@ -1,8 +1,6 @@
 package kz.kazpost.unloadingarea.api
 
-import kz.kazpost.unloadingarea.data.requests.AuthRequest
-import kz.kazpost.unloadingarea.data.responses.AuthResponse
-import kz.kazpost.unloadingarea.data.responses.TransportListResponse
+import kz.kazpost.unloadingarea.api.responses.TransportListResponse
 import retrofit2.Response
 import retrofit2.http.*
 

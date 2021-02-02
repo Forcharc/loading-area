@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <include android:id="@+id/layout_empty" layout="@layout/layout_empty"/>
+
+    <LinearLayout
+        android:id="@+id/ll_table_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            style="@style/TableCellStyle.Title"
+            android:layout_weight="2"
+            android:text="@string/number" />
+
+        <TextView
+            style="@style/TableCellStyle.Title"
+            android:text="@string/destination" />
+
+        <TextView
+            style="@style/TableCellStyle.Title"
+            android:text="@string/bag_amount" />
+
+        <TextView
+            style="@style/TableCellStyle.Title"
+            android:text="@string/parcel_amount" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_s_invoices"
+        android:layout_width="match_parent"
+        tools:listitem="@layout/item_s_invoice"
+        app:layout_constraintBottom_toTopOf="@id/b_add"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/ll_table_title" />
+
+    <Button
+        android:id="@+id/b_add"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/indent_medium"
+        android:text="@string/add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/b_cancel"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/b_cancel"
+        android:layout_width="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/indent_medium"
+        android:text="@string/cancel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/b_add" />
+</androidx.constraintlayout.widget.ConstraintLayout>

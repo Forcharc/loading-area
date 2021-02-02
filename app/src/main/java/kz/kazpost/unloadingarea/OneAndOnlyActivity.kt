@@ -15,6 +15,7 @@ class OneAndOnlyActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivityOneAndOnlyBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -24,6 +25,6 @@ class OneAndOnlyActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
         binding.toolbar.setupWithNavController(navController)
-
     }
+
 }

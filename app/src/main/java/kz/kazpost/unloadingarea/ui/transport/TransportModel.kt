@@ -1,4 +1,4 @@
-package kz.kazpost.unloadingarea.data.models
+package kz.kazpost.unloadingarea.ui.transport
 
 data class TransportModel(
     val tInvoiceNumber: String,

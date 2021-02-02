@@ -3,4 +3,10 @@
     <dimen name="indent_medium">16dp</dimen>
     <dimen name="indent_big">32dp</dimen>
     <dimen name="indent_small">8dp</dimen>
+
+    <dimen name="text_medium">16sp</dimen>
+    <dimen name="text_small">14sp</dimen>
+    <dimen name="text_ultra_small">12sp</dimen>
+
+    <dimen name="text_snackbar">8sp</dimen>
 </resources>

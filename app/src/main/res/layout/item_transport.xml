@@ -19,6 +19,9 @@
         <TextView
             android:id="@+id/tv_t_invoice_number"
             android:layout_width="0dp"
+            android:maxLines="1"
+            app:autoSizeMinTextSize="1sp"
+            app:autoSizeTextType="uniform"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/indent_medium"
             android:layout_marginEnd="@dimen/indent_medium"

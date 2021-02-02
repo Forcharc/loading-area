@@ -1,4 +1,4 @@
-package kz.kazpost.unloadingarea.data.requests
+package kz.kazpost.unloadingarea.api.requests
 
 import com.google.gson.annotations.SerializedName
 
