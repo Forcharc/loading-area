@@ -17,10 +17,13 @@
     <string name="add">Добавить</string>
     <string name="cancel">Отмена</string>
     <string name="retry">Повторить</string>
+    <string name="remove">Удалить</string>
 
     <string-array name="operations">
         <item>Добавить S</item>
+<!--
         <item>Удалить S</item>
+-->
         <item>Погрузка</item>
     </string-array>
 </resources>

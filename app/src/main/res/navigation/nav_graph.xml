@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/authFragment"
-        android:name="kz.kazpost.unloadingarea.ui.auth.AuthFragment"
+        android:name="kz.kazpost.loadingarea.ui.auth.AuthFragment"
         tools:layout="@layout/fragment_auth"
         android:label="Авторизация" >
         <action
@@ -18,23 +18,38 @@
     <fragment
         android:id="@+id/transportFragment"
         tools:layout="@layout/fragment_transport"
-        android:name="kz.kazpost.unloadingarea.ui.transport.TransportFragment"
+        android:name="kz.kazpost.loadingarea.ui.transport.TransportFragment"
         android:label="Список транспорта" >
         <action
             android:id="@+id/action_transportFragment_to_addSInvoiceFragment"
             app:destination="@id/addSInvoiceFragment" />
+        <action
+            android:id="@+id/action_transportFragment_to_removeSInvoiceFragment"
+            app:destination="@id/removeSInvoiceFragment" />
     </fragment>
     <fragment
         android:id="@+id/addSInvoiceFragment"
         tools:layout="@layout/fragment_add_s_invoice"
-        android:name="kz.kazpost.unloadingarea.ui.add_s_invoice.AddSInvoiceFragment"
+        android:name="kz.kazpost.loadingarea.ui.s_invoice.add.AddSInvoiceFragment"
         android:label="{tInvoiceNumber}" >
+        <argument
+            android:name="tInvoiceId"
+            app:argType="integer"/>
         <argument
             android:name="tInvoiceNumber"
             app:argType="string" />
         <argument
             android:name="notYetVisitedDepartments"
             app:argType="string[]" />
+    </fragment>
+    <fragment
+        android:id="@+id/removeSInvoiceFragment"
+        tools:layout="@layout/fragment_remove_s_invoice"
+        android:name="kz.kazpost.loadingarea.ui.s_invoice.remove.RemoveSInvoiceFragment"
+        android:label="{tInvoiceNumber}" >
+        <argument
+            android:name="tInvoiceNumber"
+            app:argType="string" />
     </fragment>
 
 
