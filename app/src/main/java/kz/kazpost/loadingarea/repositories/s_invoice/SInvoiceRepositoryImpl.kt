@@ -1,17 +1,15 @@
 package kz.kazpost.loadingarea.repositories.s_invoice
 
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import kz.kazpost.loadingarea.database.UserPreferences
+import kz.kazpost.loadingarea.repositories.s_invoice.models.AddSInvoicesToTInvoiceRequest
 import kz.kazpost.loadingarea.repositories.s_invoice.models.GetAvailableSInvoicesRequest
-import kz.kazpost.loadingarea.repositories.s_invoice.models.Mappers.toSInvoiceDBModel
 import kz.kazpost.loadingarea.repositories.s_invoice.models.Mappers.toSInvoiceModel
-import kz.kazpost.loadingarea.ui.s_invoice.SInvoiceRepository
 import kz.kazpost.loadingarea.ui.s_invoice.SInvoiceModel
+import kz.kazpost.loadingarea.ui.s_invoice.SInvoiceRepository
 import kz.kazpost.loadingarea.util.DateUtils
-import kz.kazpost.loadingarea.util.extentions.transform
+import kz.kazpost.loadingarea.util.extentions.transformBody
 import okhttp3.ResponseBody
 import retrofit2.Response
 import javax.inject.Inject
@@ -21,8 +19,8 @@ class SInvoiceRepositoryImpl @Inject constructor(
     private val userPreferences: UserPreferences,
     private val api: SInvoiceApi,
     private val dao: SInvoiceDao
-) :
-    SInvoiceRepository {
+) : SInvoiceRepository {
+
     override fun getAvailableSInvoices(notYetVisitedDepartments: List<String>): Flow<Response<List<SInvoiceModel>>> {
         val yesterdayDate = DateUtils.getYesterdayDate()
         val todayDate = DateUtils.getTodayDate()
@@ -41,7 +39,7 @@ class SInvoiceRepositoryImpl @Inject constructor(
                     api.getAvailableSInvoices(request)
                 )
             }.map { response ->
-                response.transform { list ->
+                response.transformBody { list ->
                     list?.map { it.toSInvoiceModel() } ?: emptyList()
                 }
             }.flowOn(Dispatchers.IO)
@@ -56,38 +54,36 @@ class SInvoiceRepositoryImpl @Inject constructor(
 
     }
 
-    override fun getSInvoicesAddedToTInvoice(tInvoiceNumber: String): Flow<Response<List<SInvoiceModel>>> {
-        return flow {
-            emit(
-                Response.success(200, dao.getThoseInTInvoice(tInvoiceNumber)).transform { list ->
-                    if (list.isNullOrEmpty()) {
-                        emptyList()
-                    } else {
-                        list.map {
-                            it.toSInvoiceModel()
-                        }
-                    }
-                }
+
+    override fun addSInvoicesToTInvoice(
+        sInvoices: List<Int>,
+        tInvoiceId: Int
+    ): Flow<Response<Boolean>> {
+        val userLogin = userPreferences.userLogin
+        if (userLogin != null) {
+            val request = AddSInvoicesToTInvoiceRequest(
+                sInvoices.joinToString { it.toString() },
+                tInvoiceId,
+                0,
+                userLogin
+            )
+            return flow {
+                emit(
+                    api.addSInvoiceToTInvoice(request)
+                )
+            }.map { response ->
+                response.transformBody {  it?.isSuccessful() ?: false }
+            }
+                .flowOn(Dispatchers.IO)
+        } else {
+            return flowOf(
+                Response.error(
+                    500,
+                    ResponseBody.create(null, "Can not get user login")
+                )
             )
         }
     }
 
-    override fun addSInvoiceToTInvoice(sInvoiceModel: SInvoiceModel, tInvoiceNumber: String) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val sInvoiceInDB = dao.getSInvoiceByNumber(sInvoiceModel.number)
-            val sInvoiceAlreadyAddedToAnotherTInvoice =
-                sInvoiceInDB != null && sInvoiceInDB.tInvoiceNumber != tInvoiceNumber
-            if (sInvoiceAlreadyAddedToAnotherTInvoice) {
-                // TODO remove all parcels from this invoice from db
-            }
-            dao.addSInvoice(sInvoiceModel.toSInvoiceDBModel(tInvoiceNumber))
-        }
-    }
 
-    override fun removeSInvoices(sInvoiceNumbers: List<String>) {
-        CoroutineScope(Dispatchers.IO).launch {
-            dao.deleteByNumbers(sInvoiceNumbers)
-            // TODO remove all parcels from this invoices from db
-        }
-    }
 }

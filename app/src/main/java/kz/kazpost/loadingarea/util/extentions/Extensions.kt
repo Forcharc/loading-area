@@ -6,7 +6,7 @@ import okhttp3.ResponseBody
 import retrofit2.Response
 
 
-fun <T, R> Response<T>.transform(func: (T?) -> R): Response<R> {
+fun <T, R> Response<T>.transformBody(func: (T?) -> R): Response<R> {
     return if (this.isSuccessful) {
         Response.success(func(this.body()), this.raw())
     } else {

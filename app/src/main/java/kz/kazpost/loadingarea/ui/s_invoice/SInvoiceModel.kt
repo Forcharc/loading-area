@@ -6,4 +6,5 @@ data class SInvoiceModel(
     val destination: String,
     val bagCount: String,
     val parcelCount: String,
+    val id: Int
 )

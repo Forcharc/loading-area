@@ -12,7 +12,7 @@ import kz.kazpost.loadingarea.databinding.ItemSInvoiceBinding
 class SInvoiceAdapter : RecyclerView.Adapter<SInvoiceAdapter.SInvoiceViewHolder>() {
     private val listDiffer = AsyncListDiffer(this, SInvoiceCallback())
 
-    private val selectedSInvoiceNumbersMap = HashMap<String, Boolean>()
+    private val selectedSInvoices = HashMap<SInvoiceModel, Boolean>()
 
     fun submitList(list: List<SInvoiceModel>) {
         listDiffer.submitList(list)
@@ -32,19 +32,25 @@ class SInvoiceAdapter : RecyclerView.Adapter<SInvoiceAdapter.SInvoiceViewHolder>
         return listDiffer.currentList.size
     }
 
+    fun getCheckedItems(): List<SInvoiceModel> {
+        return selectedSInvoices.filter {
+            it.value
+        }.map { it.key }
+    }
+
     inner class SInvoiceViewHolder(private val binding: ItemSInvoiceBinding) :
         RecyclerView.ViewHolder(binding.root) {
         private val context = binding.root.context
 
         fun bind(sInvoiceModel: SInvoiceModel) {
             binding.llTableRow.setOnClickListener {
-                selectedSInvoiceNumbersMap[sInvoiceModel.number] =
-                    !(selectedSInvoiceNumbersMap[sInvoiceModel.number] ?: false)
+                selectedSInvoices[sInvoiceModel] =
+                    !(selectedSInvoices[sInvoiceModel] ?: false)
                 notifyItemChanged(adapterPosition)
             }
 
             val colorResourceId =
-                if (selectedSInvoiceNumbersMap[sInvoiceModel.number] == true) {
+                if (selectedSInvoices[sInvoiceModel] == true) {
                     android.R.color.holo_green_light
                 } else {
                     R.color.white

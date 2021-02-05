@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.map
 import kz.kazpost.loadingarea.database.UserPreferences
 import kz.kazpost.loadingarea.repositories.auth.models.AuthRequest
 import kz.kazpost.loadingarea.ui.auth.AuthRepository
-import kz.kazpost.loadingarea.util.extentions.transform
+import kz.kazpost.loadingarea.util.extentions.transformBody
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -24,7 +24,7 @@ class AuthRepositoryImpl @Inject constructor(
                 saveUserInfo(login, password, response.body()?.groups?.get(0)?.group)
             }
 
-            response.transform { response.isSuccessful }
+            response.transformBody { response.isSuccessful }
         }.flowOn(Dispatchers.IO)
     }
 

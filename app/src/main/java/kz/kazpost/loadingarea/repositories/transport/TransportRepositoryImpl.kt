@@ -10,7 +10,7 @@ import kz.kazpost.loadingarea.database.UserPreferences
 import kz.kazpost.loadingarea.repositories.transport.models.Mappers
 import kz.kazpost.loadingarea.ui.transport.TransportRepository
 import kz.kazpost.loadingarea.util.DateUtils
-import kz.kazpost.loadingarea.util.extentions.transform
+import kz.kazpost.loadingarea.util.extentions.transformBody
 import okhttp3.ResponseBody
 import retrofit2.Response
 import javax.inject.Inject
@@ -39,7 +39,7 @@ class TransportRepositoryImpl @Inject constructor(
                 )
             )
         }.map { response ->
-            response.transform {
+            response.transformBody {
                 Mappers.transportListResponseToTransportModelList(userDepartmentId, it!!)
             }
         }.flowOn(Dispatchers.IO)

@@ -3,9 +3,12 @@ package kz.kazpost.loadingarea.ui.s_invoice.add
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kz.kazpost.loadingarea.R
 import kz.kazpost.loadingarea.base.LoadingViewModel
+import kz.kazpost.loadingarea.repositories.models.ResultResponse
 import kz.kazpost.loadingarea.ui.s_invoice.SInvoiceModel
 import kz.kazpost.loadingarea.ui.s_invoice.SInvoiceRepository
+import kz.kazpost.loadingarea.util.EventWrapper
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
@@ -19,6 +22,9 @@ class AddSInvoiceViewModel @Inject constructor(private val repository: SInvoiceR
     private val _sInvoiceListLiveData = MediatorLiveData<List<SInvoiceModel>>()
     val sInvoiceListLiveData: LiveData<List<SInvoiceModel>> = _sInvoiceListLiveData
 
+    private val _addSInvoicesResultLiveData = MediatorLiveData<EventWrapper<Boolean>>()
+    val addSInvoicesResultLiveData: LiveData<EventWrapper<Boolean>> = _addSInvoicesResultLiveData
+
     fun init(tInvoiceId: Int, tInvoiceNumber: String, notYetVisitedDepartments: List<String>) {
         this.tInvoiceId = tInvoiceId
         this.tInvoiceNumber = tInvoiceNumber
@@ -31,6 +37,17 @@ class AddSInvoiceViewModel @Inject constructor(private val repository: SInvoiceR
             onRetry = this::loadSInvoices
         )
         _sInvoiceListLiveData.observeOnce(result)
+    }
+
+    fun addSInvoicesToTInvoice(sInvoiceIds: List<Int>) {
+        if (sInvoiceIds.isEmpty()) {
+            showErrorStringResource(R.string.no_checked_items)
+        } else {
+            val result = loadFlow(repository.addSInvoicesToTInvoice(sInvoiceIds, tInvoiceId))
+            _addSInvoicesResultLiveData.addSource(result) {
+                _addSInvoicesResultLiveData.postValue(EventWrapper(it ?: false))
+            }
+        }
     }
 
 }

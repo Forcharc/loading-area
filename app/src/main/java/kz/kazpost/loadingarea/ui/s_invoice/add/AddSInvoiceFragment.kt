@@ -14,6 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kz.kazpost.loadingarea.base.LoadingViewModel.Companion.connectToLoadingViewModel
 import kz.kazpost.loadingarea.databinding.FragmentAddSInvoiceBinding
 import kz.kazpost.loadingarea.ui.s_invoice.SInvoiceAdapter
+import kz.kazpost.loadingarea.util.extentions.showSnackShort
 
 
 @AndroidEntryPoint
@@ -53,6 +54,16 @@ class AddSInvoiceFragment() : Fragment() {
                 binding.layoutEmpty.root.isVisible = true
             }
         }
+
+        viewModel.addSInvoicesResultLiveData.observe(viewLifecycleOwner) {
+            if (it.get() == true) {
+                requireView().showSnackShort("S-накладные успешно добавлены")
+                navController.popBackStack()
+            } else {
+                requireView().showSnackShort("Ошибка. Не удалось добавить S-накладные")
+            }
+        }
+
     }
 
     private fun initViews() {
@@ -67,7 +78,7 @@ class AddSInvoiceFragment() : Fragment() {
         }
 
         binding.bAdd.setOnClickListener {
-            viewModel.addSInvoicesToBInvoice
+            viewModel.addSInvoicesToTInvoice(sInvoiceAdapter.getCheckedItems().map { it.id})
         }
     }
 

@@ -18,6 +18,11 @@
     <string name="cancel">Отмена</string>
     <string name="retry">Повторить</string>
     <string name="remove">Удалить</string>
+    <string name="no_checked_items">Отсутствуют выбранные элементы</string>
+    <string name="naming">Наименование</string>
+    <string name="fact">Факт</string>
+    <string name="Plan">План</string>
+    <string name="finish">Готово</string>
 
     <string-array name="operations">
         <item>Добавить S</item>

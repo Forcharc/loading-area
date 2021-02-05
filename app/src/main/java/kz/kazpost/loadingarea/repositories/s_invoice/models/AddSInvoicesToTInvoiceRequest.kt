@@ -7,7 +7,7 @@ data class AddSInvoicesToTInvoiceRequest(
     val sInvoiceIdsSeparatedByComma: String,
 
     @field:SerializedName("tlId")
-    val tInvoiceId: Long,
+    val tInvoiceId: Int,
 
     @field:SerializedName("averageVolume")
     val averageVolume: Long,

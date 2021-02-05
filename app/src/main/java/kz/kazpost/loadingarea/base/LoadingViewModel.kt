@@ -15,14 +15,20 @@ import kz.kazpost.loadingarea.util.EventObserver
 import kz.kazpost.loadingarea.util.EventWrapper
 import kz.kazpost.loadingarea.util.extentions.clickToDismissMode
 import kz.kazpost.loadingarea.util.extentions.makeBaseSnackBar
+import kz.kazpost.loadingarea.util.extentions.showSnackShort
 import retrofit2.Response
 
 open class LoadingViewModel : ViewModel() {
     private val _isLoadingLiveData = MutableLiveData<LoadingStatus>()
     val isLoadingLiveData: LiveData<LoadingStatus> = _isLoadingLiveData
 
-    private val _errorLiveData = MutableLiveData<EventWrapper<ErrorMessageWithRetryAction>>()
-    val errorLiveData: LiveData<EventWrapper<ErrorMessageWithRetryAction>> = _errorLiveData
+    private val _errorWithRetryActionLiveData =
+        MutableLiveData<EventWrapper<ErrorMessageWithRetryAction>>()
+    val errorWithRetryActionLiveData: LiveData<EventWrapper<ErrorMessageWithRetryAction>> =
+        _errorWithRetryActionLiveData
+
+    private val _errorStringResource = MutableLiveData<EventWrapper<Int>>()
+    val errorStringResource: LiveData<EventWrapper<Int>> = _errorStringResource
 
     enum class LoadingStatus {
         LOADING(),
@@ -34,11 +40,15 @@ open class LoadingViewModel : ViewModel() {
         val retryAction: (() -> Unit)?
     )
 
+    protected fun showErrorStringResource(errorMessageResourceId: Int) {
+        _errorStringResource.postValue(EventWrapper(errorMessageResourceId))
+    }
+
     protected fun <T> loadFlow(
         flow: Flow<Response<T>>,
         onRetry: (() -> Unit)? = null,
         loadingStatusReceivingLiveData: MutableLiveData<LoadingStatus> = _isLoadingLiveData,
-        errorReceivingLiveData: MutableLiveData<EventWrapper<ErrorMessageWithRetryAction>> = _errorLiveData
+        errorReceivingLiveData: MutableLiveData<EventWrapper<ErrorMessageWithRetryAction>> = _errorWithRetryActionLiveData
     ): LiveData<T?> {
         return flow
             .onStart {
@@ -53,7 +63,13 @@ open class LoadingViewModel : ViewModel() {
             }
             .catch {
                 emit(null)
-                errorReceivingLiveData.postValue(EventWrapper(ErrorMessageWithRetryAction(it.localizedMessage ?: "Unknown error", onRetry)))
+                errorReceivingLiveData.postValue(
+                    EventWrapper(
+                        ErrorMessageWithRetryAction(
+                            it.localizedMessage ?: "Unknown error", onRetry
+                        )
+                    )
+                )
             }
             .onCompletion {
                 loadingStatusReceivingLiveData.postValue(LoadingStatus.NOT_LOADING)
@@ -77,12 +93,15 @@ open class LoadingViewModel : ViewModel() {
                 updateProgressIndicator(isLoading)
             }
         ) {
-            viewModel.errorLiveData.observe(viewLifecycleOwner, EventObserver {
+            viewModel.errorWithRetryActionLiveData.observe(viewLifecycleOwner, EventObserver {
                 showLoadingErrorSnackBar(it.errorMessage, it.retryAction)
             })
             viewModel.isLoadingLiveData.observe(viewLifecycleOwner) {
                 onLoading(it == LoadingStatus.LOADING)
             }
+            viewModel.errorStringResource.observe(viewLifecycleOwner, EventObserver {
+                requireView().showSnackShort(getString(it))
+            })
         }
 
         private fun Fragment.showLoadingErrorSnackBar(
