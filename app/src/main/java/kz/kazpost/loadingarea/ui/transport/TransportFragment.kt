@@ -17,8 +17,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import kz.kazpost.loadingarea.R
 import kz.kazpost.loadingarea.base.LoadingViewModel.Companion.connectToLoadingViewModel
 import kz.kazpost.loadingarea.databinding.FragmentTransportBinding
-import kz.kazpost.loadingarea.ui.transport.TransportAdapter.TransportActionType
-import kz.kazpost.loadingarea.util.RecyclerViewItemMarginsDecoration
+import kz.kazpost.loadingarea.ui._adapters.TransportAdapter
+import kz.kazpost.loadingarea.ui._models.TransportModel
+import kz.kazpost.loadingarea.ui._adapters.TransportAdapter.TransportActionType
+import kz.kazpost.loadingarea.ui._decorations.RecyclerViewItemMarginsDecoration
 import kz.kazpost.loadingarea.util.extentions.showSnackShort
 
 @AndroidEntryPoint
@@ -111,10 +113,12 @@ class TransportFragment : Fragment(), TransportAdapter.TransportActionListener {
         Log.d(TAG, "onOptionsItemSelected: ${item.itemId}")
         return when (item.itemId) {
             android.R.id.home -> {
+                Log.d(TAG, "onOptionsItemSelected: home")
                 view?.showSnackShort("home")
                 true
             }
             else -> {
+                Log.d(TAG, "onOptionsItemSelected: other")
                 view?.showSnackShort("other")
                 true
                 //super.onOptionsItemSelected(item)
@@ -149,7 +153,13 @@ class TransportFragment : Fragment(), TransportAdapter.TransportActionListener {
                 )
             }
             TransportActionType.LOAD_TRANSPORT -> {
-                view?.showSnackShort("LOAD")
+                navController.navigate(
+                    TransportFragmentDirections.actionTransportFragmentToScanFragment(
+                        transportModel.index,
+                        transportModel.tInvoiceNumber,
+                        transportModel.id
+                    )
+                )
             }
         }
     }

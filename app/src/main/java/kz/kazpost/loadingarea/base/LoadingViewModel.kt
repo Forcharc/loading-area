@@ -40,7 +40,7 @@ open class LoadingViewModel : ViewModel() {
         val retryAction: (() -> Unit)?
     )
 
-    protected fun showErrorStringResource(errorMessageResourceId: Int) {
+    protected fun showMessageStringResource(errorMessageResourceId: Int) {
         _errorStringResource.postValue(EventWrapper(errorMessageResourceId))
     }
 

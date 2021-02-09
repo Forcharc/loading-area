@@ -23,6 +23,11 @@
     <string name="fact">Факт</string>
     <string name="Plan">План</string>
     <string name="finish">Готово</string>
+    <string name="shpi_code">Код ШПИ</string>
+    <string name="wrong_parcel">Мешок/посылка не относится к данному транспорту</string>
+    <string name="shpi_already_added">Мешок/посылка уже отсканирваны</string>
+    <string name="error_try_again">Ошибка. Попробуйте повторить позднее</string>
+    <string name="successfully_added">Посылка/мешок успешно добавлены</string>
 
     <string-array name="operations">
         <item>Добавить S</item>

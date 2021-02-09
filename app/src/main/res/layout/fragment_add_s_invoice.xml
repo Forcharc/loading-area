@@ -9,12 +9,19 @@
         android:id="@+id/layout_empty"
         layout="@layout/layout_empty" />
 
+    <View
+        android:id="@+id/v_top_line"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/black"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
         android:id="@+id/ll_table_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/v_top_line">
 
         <TextView
             style="@style/TableCellStyle.Title"

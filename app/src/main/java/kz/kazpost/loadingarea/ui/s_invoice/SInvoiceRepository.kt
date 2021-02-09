@@ -1,7 +1,7 @@
 package kz.kazpost.loadingarea.ui.s_invoice
 
 import kotlinx.coroutines.flow.Flow
-import kz.kazpost.loadingarea.repositories.models.ResultResponse
+import kz.kazpost.loadingarea.ui._models.SInvoiceModel
 import retrofit2.Response
 
 interface SInvoiceRepository {

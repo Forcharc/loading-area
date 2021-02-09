@@ -8,8 +8,8 @@
     <fragment
         android:id="@+id/authFragment"
         android:name="kz.kazpost.loadingarea.ui.auth.AuthFragment"
-        tools:layout="@layout/fragment_auth"
-        android:label="Авторизация" >
+        android:label="Авторизация"
+        tools:layout="@layout/fragment_auth">
         <action
             android:id="@+id/action_authFragment_to_transportFragment"
             app:destination="@id/transportFragment" />
@@ -17,24 +17,27 @@
 
     <fragment
         android:id="@+id/transportFragment"
-        tools:layout="@layout/fragment_transport"
         android:name="kz.kazpost.loadingarea.ui.transport.TransportFragment"
-        android:label="Список транспорта" >
+        android:label="Список транспорта"
+        tools:layout="@layout/fragment_transport">
         <action
             android:id="@+id/action_transportFragment_to_addSInvoiceFragment"
             app:destination="@id/addSInvoiceFragment" />
         <action
             android:id="@+id/action_transportFragment_to_removeSInvoiceFragment"
             app:destination="@id/removeSInvoiceFragment" />
+        <action
+            android:id="@+id/action_transportFragment_to_scanFragment"
+            app:destination="@id/scanFragment" />
     </fragment>
     <fragment
         android:id="@+id/addSInvoiceFragment"
-        tools:layout="@layout/fragment_add_s_invoice"
         android:name="kz.kazpost.loadingarea.ui.s_invoice.add.AddSInvoiceFragment"
-        android:label="{tInvoiceNumber}" >
+        android:label="{tInvoiceNumber}"
+        tools:layout="@layout/fragment_add_s_invoice">
         <argument
             android:name="tInvoiceId"
-            app:argType="integer"/>
+            app:argType="integer" />
         <argument
             android:name="tInvoiceNumber"
             app:argType="string" />
@@ -44,12 +47,27 @@
     </fragment>
     <fragment
         android:id="@+id/removeSInvoiceFragment"
-        tools:layout="@layout/fragment_remove_s_invoice"
         android:name="kz.kazpost.loadingarea.ui.s_invoice.remove.RemoveSInvoiceFragment"
-        android:label="{tInvoiceNumber}" >
+        android:label="{tInvoiceNumber}"
+        tools:layout="@layout/fragment_remove_s_invoice">
         <argument
             android:name="tInvoiceNumber"
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/scanFragment"
+        android:name="kz.kazpost.loadingarea.ui.scan.ScanFragment"
+        android:label="ScanFragment"
+        tools:layout="@layout/fragment_scan">
+        <argument
+            android:name="index"
+            app:argType="integer" />
+        <argument
+            android:name="tInvoiceNumber"
+            app:argType="string" />
+        <argument
+            android:name="tInvoiceId"
+            app:argType="integer" />
     </fragment>
 
 

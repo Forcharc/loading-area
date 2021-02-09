@@ -1,40 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:minHeight="40dp">
 
     <TextView
         android:id="@+id/tv_naming"
         style="@style/TableCellStyle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:maxLines="1"
-        app:layout_constraintEnd_toStartOf="@id/tv_plan"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_weight="3"
         tools:text="Мешки сактандыру" />
 
     <TextView
         android:id="@+id/tv_plan"
         style="@style/TableCellStyle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:maxLines="1"
-        app:layout_constraintEnd_toStartOf="@id/tv_fact"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.15"
         tools:text="5" />
 
     <TextView
         android:id="@+id/tv_fact"
         style="@style/TableCellStyle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:maxLines="1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.15"
         tools:text="5" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

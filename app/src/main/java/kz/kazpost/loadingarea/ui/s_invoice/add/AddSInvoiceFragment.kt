@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kz.kazpost.loadingarea.base.LoadingViewModel.Companion.connectToLoadingViewModel
 import kz.kazpost.loadingarea.databinding.FragmentAddSInvoiceBinding
-import kz.kazpost.loadingarea.ui.s_invoice.SInvoiceAdapter
+import kz.kazpost.loadingarea.ui._adapters.SInvoiceAdapter
 import kz.kazpost.loadingarea.util.extentions.showSnackShort
 
 

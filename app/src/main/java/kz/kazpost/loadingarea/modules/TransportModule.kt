@@ -5,8 +5,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kz.kazpost.loadingarea.repositories.transport.TransportApi
-import kz.kazpost.loadingarea.repositories.transport.TransportRepositoryImpl
+import kz.kazpost.loadingarea.api.TransportApi
+import kz.kazpost.loadingarea.repositories.TransportRepositoryImpl
 import kz.kazpost.loadingarea.ui.transport.TransportRepository
 import retrofit2.Retrofit
 

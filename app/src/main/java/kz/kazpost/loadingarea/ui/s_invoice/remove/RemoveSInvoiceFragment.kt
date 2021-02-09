@@ -12,7 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import kz.kazpost.loadingarea.base.LoadingViewModel.Companion.connectToLoadingViewModel
 import kz.kazpost.loadingarea.databinding.FragmentRemoveSInvoiceBinding
-import kz.kazpost.loadingarea.ui.s_invoice.SInvoiceAdapter
+import kz.kazpost.loadingarea.ui._adapters.SInvoiceAdapter
 
 class RemoveSInvoiceFragment : Fragment() {
     private val safeArgs by lazy { RemoveSInvoiceFragmentArgs.fromBundle(requireArguments()) }

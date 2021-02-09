@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kz.kazpost.loadingarea.base.LoadingViewModel
+import kz.kazpost.loadingarea.ui._models.TransportModel
 import kz.kazpost.loadingarea.ui.auth.AuthRepository
 import javax.inject.Inject
 

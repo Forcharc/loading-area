@@ -5,8 +5,7 @@ import androidx.lifecycle.MediatorLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kz.kazpost.loadingarea.R
 import kz.kazpost.loadingarea.base.LoadingViewModel
-import kz.kazpost.loadingarea.repositories.models.ResultResponse
-import kz.kazpost.loadingarea.ui.s_invoice.SInvoiceModel
+import kz.kazpost.loadingarea.ui._models.SInvoiceModel
 import kz.kazpost.loadingarea.ui.s_invoice.SInvoiceRepository
 import kz.kazpost.loadingarea.util.EventWrapper
 import javax.inject.Inject
@@ -41,7 +40,7 @@ class AddSInvoiceViewModel @Inject constructor(private val repository: SInvoiceR
 
     fun addSInvoicesToTInvoice(sInvoiceIds: List<Int>) {
         if (sInvoiceIds.isEmpty()) {
-            showErrorStringResource(R.string.no_checked_items)
+            showMessageStringResource(R.string.no_checked_items)
         } else {
             val result = loadFlow(repository.addSInvoicesToTInvoice(sInvoiceIds, tInvoiceId))
             _addSInvoicesResultLiveData.addSource(result) {
