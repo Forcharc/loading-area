@@ -27,8 +27,14 @@ class ScanViewModel @Inject constructor(private val repository: ScanRepository) 
     private val _categoriesLiveData = MediatorLiveData<List<ParcelCategoryModel>>()
     val categoriesLiveData: LiveData<List<ParcelCategoryModel>> = _categoriesLiveData
 
+    private val _scanSuccessLiveData = MediatorLiveData<Boolean>()
+    val scanSuccessLiveData: LiveData<Boolean> = _scanSuccessLiveData
+
     private val _clearShpiLiveData = MutableLiveData<EventWrapper<Boolean>>()
     val clearShpiLiveData: LiveData<EventWrapper<Boolean>> = _clearShpiLiveData
+
+    private val _verifyErrorLiveData = MutableLiveData<EventWrapper<ErrorMessageWithRetryAction>>()
+    val verifyErrorLiveData: LiveData<EventWrapper<ErrorMessageWithRetryAction>> = _verifyErrorLiveData
 
     fun init(index: Int, tInvoiceNumber: String, tInvoiceId: Int) {
         this.index = index
@@ -120,7 +126,13 @@ class ScanViewModel @Inject constructor(private val repository: ScanRepository) 
 
     fun confirmParcels() {
         val factParcels = getFactParcelShpis()
-        repository.verifyThatAllParcelsIncluded(factParcels, tInvoiceId)
+        val result = loadFlow(repository.verifyThatAllParcelsAreIncluded(factParcels, tInvoiceId, index), errorReceivingLiveData = _verifyErrorLiveData)
+        _scanSuccessLiveData.addSource(result) {
+            if (it == true) {
+                showMessageStringResource(R.string.scan_success)
+            }
+            _scanSuccessLiveData.removeSource(result)
+        }
     }
 
     private fun getFactParcelShpis(): List<String> {

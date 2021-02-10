@@ -11,5 +11,5 @@ interface ScanRepository {
     ): Flow<Response<List<ParcelCategoryModel>>>
 
     fun rememberAddedParcel(shpi: String, tInvoiceNumber: String)
-    fun verifyThatAllParcelsIncluded(factParcels: List<String>, tInvoiceId: Int)
+    fun verifyThatAllParcelsAreIncluded(factParcels: List<String>, tInvoiceId: Int, index: Int): Flow<Response<Boolean>>
 }

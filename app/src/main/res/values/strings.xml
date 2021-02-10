@@ -28,6 +28,8 @@
     <string name="shpi_already_added">Мешок/посылка уже отсканирваны</string>
     <string name="error_try_again">Ошибка. Попробуйте повторить позднее</string>
     <string name="successfully_added">Посылка/мешок успешно добавлены</string>
+    <string name="error">Ошибка</string>
+    <string name="scan_success">Все посылки успешно просканированы</string>
 
     <string-array name="operations">
         <item>Добавить S</item>

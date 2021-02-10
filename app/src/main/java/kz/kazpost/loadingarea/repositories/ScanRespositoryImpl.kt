@@ -111,10 +111,15 @@ class ScanRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun verifyThatAllParcelsIncluded(factParcels: List<String>, tInvoiceId: Int) {
-        val request = VerifyThatAllParcelsIncludedRequest(factParcels, tInvoiceId, prefs.userDepartmentId!!)
-        flow {
+    override fun verifyThatAllParcelsAreIncluded(factParcels: List<String>, tInvoiceId: Int, index: Int): Flow<Response<Boolean>> {
+        val request =
+            VerifyThatAllParcelsIncludedRequest(factParcels, tInvoiceId, prefs.userDepartmentId!!, index)
+        return flow {
             emit(api.verifyThatAllParcelsIncluded(request))
-        }
+        }.map { response ->
+            response.transformBody {
+                it?.isSuccessful() == true
+            }
+        }.flowOn(Dispatchers.IO)
     }
 }

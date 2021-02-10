@@ -26,14 +26,8 @@ class OneAndOnlyActivity : AppCompatActivity() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
         navController = navHostFragment.navController
-        appBarConfiguration = AppBarConfiguration(navController.graph)
-        setupActionBarWithNavController(navController, appBarConfiguration)
         setSupportActionBar(binding.toolbar)
         binding.toolbar.setupWithNavController(navController)
-    }
-
-    override fun onNavigateUp(): Boolean {
-        return super.onNavigateUp()
     }
 
     override fun onSupportNavigateUp(): Boolean {

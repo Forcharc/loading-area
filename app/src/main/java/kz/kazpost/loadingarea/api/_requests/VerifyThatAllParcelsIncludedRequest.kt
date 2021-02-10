@@ -10,5 +10,8 @@ data class VerifyThatAllParcelsIncludedRequest(
     val tInvoiceId: Int,
 
     @field:SerializedName(value = "department")
-    val userDepartmentId: String
+    val userDepartmentId: String,
+
+    @field:SerializedName(value = "index")
+    val index: Int
 )

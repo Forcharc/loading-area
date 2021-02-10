@@ -1,5 +1,6 @@
 package kz.kazpost.loadingarea.ui.scan
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
+import kz.kazpost.loadingarea.R
 import kz.kazpost.loadingarea.base.LoadingViewModel.Companion.connectToLoadingViewModel
 import kz.kazpost.loadingarea.databinding.FragmentScanBinding
 import kz.kazpost.loadingarea.ui._adapters.ParcelCategoryAdapter
@@ -77,8 +79,26 @@ class ScanFragment : Fragment() {
         }
 
         viewModel.clearShpiLiveData.observe(viewLifecycleOwner) {
-            binding.etShpi.setText("")
+            if (it?.get() == true) binding.etShpi.setText("")
         }
+
+        viewModel.verifyErrorLiveData.observe(viewLifecycleOwner) { eventWrapper ->
+            eventWrapper?.get()?.errorMessage?.let {
+                showErrorDialog(it)
+            }
+        }
+
+        viewModel.scanSuccessLiveData.observe(viewLifecycleOwner) {}
+    }
+
+    private fun showErrorDialog(message: String) {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.error)
+            .setMessage(message)
+            .setNegativeButton(R.string.cancel) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
     private fun initViewModel() {
