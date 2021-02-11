@@ -65,8 +65,8 @@ class SInvoiceAdapter : RecyclerView.Adapter<SInvoiceAdapter.SInvoiceViewHolder>
 
             binding.tvNumber.text = sInvoiceModel.number
             binding.tvDestination.text = sInvoiceModel.destination
-            binding.tvBagCount.text = sInvoiceModel.bagCount
-            binding.tvParcelCount.text = sInvoiceModel.parcelCount
+            binding.tvBagCount.text = sInvoiceModel.bagCount.toString()
+            binding.tvParcelCount.text = sInvoiceModel.parcelCount.toString()
         }
     }
 

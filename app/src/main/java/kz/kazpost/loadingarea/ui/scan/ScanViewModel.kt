@@ -126,10 +126,11 @@ class ScanViewModel @Inject constructor(private val repository: ScanRepository) 
 
     fun confirmParcels() {
         val factParcels = getFactParcelShpis()
-        val result = loadFlow(repository.verifyThatAllParcelsAreIncluded(factParcels, tInvoiceId, index), errorReceivingLiveData = _verifyErrorLiveData)
+        val result = loadFlow(repository.verifyThatAllParcelsAreIncluded(factParcels, tInvoiceId, index, tInvoiceNumber), errorReceivingLiveData = _verifyErrorLiveData)
         _scanSuccessLiveData.addSource(result) {
             if (it == true) {
                 showMessageStringResource(R.string.scan_success)
+                _scanSuccessLiveData.postValue(true)
             }
             _scanSuccessLiveData.removeSource(result)
         }

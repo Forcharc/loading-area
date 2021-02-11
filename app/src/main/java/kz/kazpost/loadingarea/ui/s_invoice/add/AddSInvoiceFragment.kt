@@ -41,7 +41,6 @@ class AddSInvoiceFragment() : Fragment() {
         initViewModel()
         initViews()
         initObservers()
-
     }
 
     private fun initObservers() {

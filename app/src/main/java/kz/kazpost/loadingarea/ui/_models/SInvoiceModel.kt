@@ -6,8 +6,8 @@ import androidx.recyclerview.widget.DiffUtil
 data class SInvoiceModel(
     val number: String,
     val destination: String,
-    val bagCount: String,
-    val parcelCount: String,
+    val bagCount: Int,
+    val parcelCount: Int,
     val id: Int
 ) {
     class ItemCallback : DiffUtil.ItemCallback<SInvoiceModel>() {

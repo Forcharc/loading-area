@@ -88,7 +88,11 @@ class ScanFragment : Fragment() {
             }
         }
 
-        viewModel.scanSuccessLiveData.observe(viewLifecycleOwner) {}
+        viewModel.scanSuccessLiveData.observe(viewLifecycleOwner) {
+            if (it == true)  {
+                navController.popBackStack()
+            }
+        }
     }
 
     private fun showErrorDialog(message: String) {

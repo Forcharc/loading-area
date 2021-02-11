@@ -111,13 +111,30 @@ class ScanRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun verifyThatAllParcelsAreIncluded(factParcels: List<String>, tInvoiceId: Int, index: Int): Flow<Response<Boolean>> {
+    override fun verifyThatAllParcelsAreIncluded(
+        factParcels: List<String>,
+        tInvoiceId: Int,
+        index: Int,
+        tInvoiceNumber: String
+    ): Flow<Response<Boolean>> {
         val request =
-            VerifyThatAllParcelsIncludedRequest(factParcels, tInvoiceId, prefs.userDepartmentId!!, index)
+            VerifyThatAllParcelsIncludedRequest(
+                factParcels,
+                tInvoiceId,
+                prefs.userDepartmentId!!,
+                index
+            )
         return flow {
             emit(api.verifyThatAllParcelsIncluded(request))
         }.map { response ->
             response.transformBody {
+                if (it?.isSuccessful() == true) {
+                    CoroutineScope(Dispatchers.IO).launch {
+/*
+                        addedShpisDao.deleteRememberedShpisForTInvoice(tInvoiceNumber)
+*/
+                    }
+                }
                 it?.isSuccessful() == true
             }
         }.flowOn(Dispatchers.IO)

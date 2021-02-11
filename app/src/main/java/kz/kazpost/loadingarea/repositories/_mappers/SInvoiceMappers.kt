@@ -10,8 +10,8 @@ object SInvoiceMappers {
         return SInvoiceModel(
             this.destinationListId ?: StringConstants.stringUnknown,
             this.toDepartment?.longNameRu ?: StringConstants.stringUnknown,
-            this.totalNumberOfLabels?.toString() ?: StringConstants.stringUnknown,
-            this.totalNumberMails?.toString() ?: StringConstants.stringUnknown,
+            (this.totalNumberOfLabels ?: 0),
+            this.totalNumberOfPLs ?: 0,
             this.id ?: -1
         )
     }

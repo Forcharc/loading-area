@@ -30,6 +30,9 @@
     <string name="successfully_added">Посылка/мешок успешно добавлены</string>
     <string name="error">Ошибка</string>
     <string name="scan_success">Все посылки успешно просканированы</string>
+    <string name="list_of_parcels">Список посылок и емкостей</string>
+    <string name="transport_list">Список транспорта</string>
+    <string name="authorization">Авторизация</string>
 
     <string-array name="operations">
         <item>Добавить S</item>

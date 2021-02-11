@@ -11,16 +11,19 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kz.kazpost.loadingarea.R
 import kz.kazpost.loadingarea.base.LoadingViewModel.Companion.connectToLoadingViewModel
+import kz.kazpost.loadingarea.base.NavigateUpActivity
 import kz.kazpost.loadingarea.databinding.FragmentTransportBinding
 import kz.kazpost.loadingarea.ui._adapters.TransportAdapter
-import kz.kazpost.loadingarea.ui._models.TransportModel
 import kz.kazpost.loadingarea.ui._adapters.TransportAdapter.TransportActionType
 import kz.kazpost.loadingarea.ui._decorations.RecyclerViewItemMarginsDecoration
+import kz.kazpost.loadingarea.ui._models.TransportModel
 import kz.kazpost.loadingarea.util.extentions.showSnackShort
 
 @AndroidEntryPoint
@@ -50,17 +53,7 @@ class TransportFragment : Fragment(), TransportAdapter.TransportActionListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    this.remove()
-                    viewModel.exitUser()
-                    requireActivity().onBackPressed()
-                }
-            }
-        )
+        exitOnBackButtonPress()
 
 
         initViews()
@@ -70,6 +63,30 @@ class TransportFragment : Fragment(), TransportAdapter.TransportActionListener {
         viewModel.loadTransportList()
 
         connectToLoadingViewModel(viewModel)
+    }
+
+    private fun exitOnBackButtonPress() {
+        val onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                this.remove()
+                viewModel.exitUser()
+                requireActivity().onBackPressed()
+            }
+        }
+        val onBackButtonPressedCallback = object: NavigateUpActivity.OnBackButtonPressedCallback() {
+            override fun onNavigateUp(
+                navController: NavController,
+                configuration: AppBarConfiguration
+            ) {
+                viewModel.exitUser()
+                super.onNavigateUp(navController, configuration)
+            }
+        }
+
+        (requireActivity() as NavigateUpActivity).apply {
+            onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
+            setOnBackButtonPressedCallback(viewLifecycleOwner, onBackButtonPressedCallback)
+        }
     }
 
     private fun initObservers() {
@@ -167,7 +184,6 @@ class TransportFragment : Fragment(), TransportAdapter.TransportActionListener {
     companion object {
         private const val TAG = "TransportFragment"
     }
-
 
 
 }
