@@ -62,7 +62,7 @@ class SInvoiceRepositoryImpl @Inject constructor(
         val userLogin = userPreferences.userLogin
         if (userLogin != null) {
             val request = AddSInvoicesToTInvoiceRequest(
-                sInvoices.joinToString { it.toString() },
+                sInvoices.joinToString(",") { it.toString() },
                 tInvoiceId,
                 0,
                 userLogin
