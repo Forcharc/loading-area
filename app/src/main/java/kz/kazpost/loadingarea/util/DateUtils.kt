@@ -8,7 +8,7 @@ object DateUtils {
 
     fun getYesterdayDate(): String {
         val date = Calendar.getInstance()
-        date.add(Calendar.DATE, -8)
+        date.add(Calendar.DATE, -1)
         return dateFormat.format(date.time)
     }
 
