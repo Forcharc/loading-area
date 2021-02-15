@@ -33,6 +33,10 @@
     <string name="list_of_parcels">Список посылок и емкостей</string>
     <string name="transport_list">Список транспорта</string>
     <string name="authorization">Авторизация</string>
+    <string name="update">Обновить</string>
+    <string name="exit">Выйти</string>
+    <string name="yes">Да</string>
+    <string name="do_you_want_to_exit">Вы уверены, что хотите выйти из аккаунта?</string>
 
     <string-array name="operations">
         <item>Добавить S</item>

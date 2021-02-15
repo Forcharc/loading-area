@@ -3,6 +3,7 @@ package kz.kazpost.loadingarea
 import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
 import dagger.hilt.android.AndroidEntryPoint
 import kz.kazpost.loadingarea.base.NavigateUpActivity
 import kz.kazpost.loadingarea.databinding.ActivityOneAndOnlyBinding
@@ -11,7 +12,6 @@ import kz.kazpost.loadingarea.databinding.ActivityOneAndOnlyBinding
 class OneAndOnlyActivity : NavigateUpActivity() {
     private lateinit var binding: ActivityOneAndOnlyBinding
     private lateinit var navController: NavController
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,9 +25,10 @@ class OneAndOnlyActivity : NavigateUpActivity() {
         navController = navHostFragment.navController
         setSupportActionBar(binding.toolbar)
 
-        binding.toolbar.setupWithNavController(navController)
+        val appBarConfiguration =
+            AppBarConfiguration(setOf(R.id.authFragment, R.id.transportFragment))
+        binding.toolbar.setupWithNavController(navController, appBarConfiguration)
     }
-
 
 
 }

@@ -1,11 +1,9 @@
 package kz.kazpost.loadingarea.ui.transport
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -24,7 +22,6 @@ import kz.kazpost.loadingarea.ui._adapters.TransportAdapter
 import kz.kazpost.loadingarea.ui._adapters.TransportAdapter.TransportActionType
 import kz.kazpost.loadingarea.ui._decorations.RecyclerViewItemMarginsDecoration
 import kz.kazpost.loadingarea.ui._models.TransportModel
-import kz.kazpost.loadingarea.util.extentions.showSnackShort
 
 @AndroidEntryPoint
 class TransportFragment : Fragment(), TransportAdapter.TransportActionListener {
@@ -68,25 +65,41 @@ class TransportFragment : Fragment(), TransportAdapter.TransportActionListener {
     private fun exitOnBackButtonPress() {
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                this.remove()
-                viewModel.exitUser()
-                requireActivity().onBackPressed()
+                showExitUserConfirmationDialog {
+                    this.remove()
+                    viewModel.exitUser()
+                    requireActivity().onBackPressed()
+                }
             }
         }
-        val onBackButtonPressedCallback = object: NavigateUpActivity.OnBackButtonPressedCallback() {
-            override fun onNavigateUp(
-                navController: NavController,
-                configuration: AppBarConfiguration
-            ) {
-                viewModel.exitUser()
-                super.onNavigateUp(navController, configuration)
+        val onBackButtonPressedCallback =
+            object : NavigateUpActivity.OnBackButtonPressedCallback() {
+                override fun onNavigateUp(
+                    navController: NavController,
+                    configuration: AppBarConfiguration
+                ) {
+                    showExitUserConfirmationDialog {
+                        viewModel.exitUser()
+                        super.onNavigateUp(navController, configuration)
+                    }
+                }
             }
-        }
 
         (requireActivity() as NavigateUpActivity).apply {
             onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
             setOnBackButtonPressedCallback(viewLifecycleOwner, onBackButtonPressedCallback)
         }
+    }
+
+    fun showExitUserConfirmationDialog(onExit: () -> Unit) {
+        AlertDialog.Builder(requireContext()).setTitle(R.string.exit)
+            .setMessage(getString(R.string.do_you_want_to_exit))
+            .setPositiveButton(R.string.yes) { dialog, _ ->
+                onExit()
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+            .show()
     }
 
     private fun initObservers() {
@@ -126,22 +139,6 @@ class TransportFragment : Fragment(), TransportAdapter.TransportActionListener {
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        Log.d(TAG, "onOptionsItemSelected: ${item.itemId}")
-        return when (item.itemId) {
-            android.R.id.home -> {
-                Log.d(TAG, "onOptionsItemSelected: home")
-                view?.showSnackShort("home")
-                true
-            }
-            else -> {
-                Log.d(TAG, "onOptionsItemSelected: other")
-                view?.showSnackShort("other")
-                true
-                //super.onOptionsItemSelected(item)
-            }
-        }
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -178,6 +175,27 @@ class TransportFragment : Fragment(), TransportAdapter.TransportActionListener {
                     )
                 )
             }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_transport, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        Log.d(TAG, "onOptionsItemSelected: ${item.itemId}")
+        return when (item.itemId) {
+            R.id.item_update -> {
+                viewModel.loadTransportList()
+                true
+            }
+            R.id.item_exit -> {
+                viewModel.exitUser()
+                navController.popBackStack()
+                true
+            }
+            else -> false
         }
     }
 
