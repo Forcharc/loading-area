@@ -41,13 +41,22 @@
             android:text="@string/parcel_amount" />
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_s_invoices"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swl"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/b_add"
-        app:layout_constraintTop_toBottomOf="@id/ll_table_title"
-        tools:listitem="@layout/item_s_invoice" />
+        app:layout_constraintTop_toBottomOf="@id/ll_table_title">
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_s_invoices"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            tools:listitem="@layout/item_s_invoice" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <Button
         android:id="@+id/b_add"

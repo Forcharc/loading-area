@@ -35,7 +35,9 @@ class SInvoiceAdapter : RecyclerView.Adapter<SInvoiceAdapter.SInvoiceViewHolder>
     fun getCheckedItems(): List<SInvoiceModel> {
         return selectedSInvoices.filter {
             it.value
-        }.map { it.key }
+        }.map { it.key }.filter {
+            listDiffer.currentList.contains(it)
+        }
     }
 
     inner class SInvoiceViewHolder(private val binding: ItemSInvoiceBinding) :

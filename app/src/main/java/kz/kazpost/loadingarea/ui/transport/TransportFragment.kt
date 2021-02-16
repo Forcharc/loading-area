@@ -230,7 +230,6 @@ class TransportFragment : Fragment(), TransportAdapter.TransportActionListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        Log.d(TAG, "onOptionsItemSelected: ${item.itemId}")
         return when (item.itemId) {
             R.id.item_update -> {
                 transportAdapter.refresh()

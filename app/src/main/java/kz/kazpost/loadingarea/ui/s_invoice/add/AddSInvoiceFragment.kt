@@ -1,9 +1,7 @@
 package kz.kazpost.loadingarea.ui.s_invoice.add
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -11,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
+import kz.kazpost.loadingarea.R
 import kz.kazpost.loadingarea.base.LoadingViewModel.Companion.connectToLoadingViewModel
 import kz.kazpost.loadingarea.databinding.FragmentAddSInvoiceBinding
 import kz.kazpost.loadingarea.ui._adapters.SInvoiceAdapter
@@ -34,6 +33,11 @@ class AddSInvoiceFragment() : Fragment() {
     ): View {
         _binding = FragmentAddSInvoiceBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        setHasOptionsMenu(true)
+        super.onCreate(savedInstanceState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -66,6 +70,11 @@ class AddSInvoiceFragment() : Fragment() {
     }
 
     private fun initViews() {
+        binding.swl.setOnRefreshListener {
+            viewModel.loadSInvoices()
+            binding.swl.isRefreshing = false
+        }
+
         binding.rvSInvoices.apply {
             adapter = sInvoiceAdapter
             setHasFixedSize(true)
@@ -77,7 +86,7 @@ class AddSInvoiceFragment() : Fragment() {
         }
 
         binding.bAdd.setOnClickListener {
-            viewModel.addSInvoicesToTInvoice(sInvoiceAdapter.getCheckedItems().map { it.id})
+            viewModel.addSInvoicesToTInvoice(sInvoiceAdapter.getCheckedItems().map { it.id })
         }
     }
 
@@ -90,8 +99,26 @@ class AddSInvoiceFragment() : Fragment() {
         viewModel.loadSInvoices()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_add_s_invoice, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.item_update -> {
+                viewModel.loadSInvoices()
+                true
+            }
+            else -> false
+        }
+    }
+
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+    }
+
+    companion object {
+        private const val TAG = "AddSInvoiceFragment"
     }
 }
