@@ -17,6 +17,7 @@ import kz.kazpost.loadingarea.R
 import kz.kazpost.loadingarea.base.LoadingViewModel.Companion.connectToLoadingViewModel
 import kz.kazpost.loadingarea.databinding.FragmentScanBinding
 import kz.kazpost.loadingarea.ui._adapters.ParcelCategoryAdapter
+import kz.kazpost.loadingarea.util.EventObserver
 
 @AndroidEntryPoint
 class ScanFragment : Fragment() {
@@ -78,18 +79,16 @@ class ScanFragment : Fragment() {
             }
         }
 
-        viewModel.clearShpiLiveData.observe(viewLifecycleOwner) {
-            if (it?.get() == true) binding.etShpi.setText("")
-        }
+        viewModel.clearShpiLiveData.observe(viewLifecycleOwner, EventObserver {
+            if (it) binding.etShpi.setText("")
+        })
 
-        viewModel.verifyErrorLiveData.observe(viewLifecycleOwner) { eventWrapper ->
-            eventWrapper?.get()?.errorMessage?.let {
-                showErrorDialog(it)
-            }
-        }
+        viewModel.verifyErrorLiveData.observe(viewLifecycleOwner, EventObserver { error ->
+            showErrorDialog(error.errorMessage)
+        })
 
         viewModel.scanSuccessLiveData.observe(viewLifecycleOwner) {
-            if (it == true)  {
+            if (it == true) {
                 navController.popBackStack()
             }
         }

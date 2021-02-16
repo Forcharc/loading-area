@@ -40,6 +40,19 @@ class SInvoiceAdapter : RecyclerView.Adapter<SInvoiceAdapter.SInvoiceViewHolder>
         }
     }
 
+    /* Returns true if success and false otherwise */
+    fun makeItemWithShpiChecked(shpi: String): Boolean {
+        val foundItemPosition = listDiffer.currentList.indexOfFirst { it.number == shpi }
+        return if (foundItemPosition == -1) {
+            false
+        } else {
+            val foundItem = listDiffer.currentList[foundItemPosition]
+            selectedSInvoices[foundItem] = true
+            notifyItemChanged(foundItemPosition)
+            true
+        }
+    }
+
     inner class SInvoiceViewHolder(private val binding: ItemSInvoiceBinding) :
         RecyclerView.ViewHolder(binding.root) {
         private val context = binding.root.context
@@ -71,7 +84,6 @@ class SInvoiceAdapter : RecyclerView.Adapter<SInvoiceAdapter.SInvoiceViewHolder>
             binding.tvParcelCount.text = sInvoiceModel.parcelCount.toString()
         }
     }
-
 
 
 }

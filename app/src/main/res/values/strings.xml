@@ -38,6 +38,11 @@
     <string name="yes">Да</string>
     <string name="do_you_want_to_exit">Вы уверены, что хотите выйти из аккаунта?</string>
     <string name="retry_loading">Повторить загрузку</string>
+    <string name="s_invoice_number">Номер S накладной</string>
+    <string name="s_invoices_added_successfully">S-накладные успешно добавлены</string>
+    <string name="did_not_add_s_invoices">Ошибка. Не удалось добавить S-накладные</string>
+    <string name="shpi_added">%1$s выделен</string>
+    <string name="s_invoice_not_found">S-накладная не найдена</string>
 
     <string-array name="operations">
         <item>Добавить S</item>

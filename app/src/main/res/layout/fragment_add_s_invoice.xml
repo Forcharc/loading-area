@@ -45,7 +45,7 @@
         android:id="@+id/swl"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/b_add"
+        app:layout_constraintBottom_toTopOf="@id/et_shpi"
         app:layout_constraintTop_toBottomOf="@id/ll_table_title">
 
 
@@ -57,6 +57,17 @@
             tools:listitem="@layout/item_s_invoice" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <EditText
+        android:id="@+id/et_shpi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/indent_medium"
+        android:gravity="center"
+        android:hint="@string/s_invoice_number"
+        android:importantForAutofill="no"
+        android:inputType="textCapCharacters"
+        app:layout_constraintBottom_toTopOf="@id/b_cancel" />
 
     <Button
         android:id="@+id/b_add"

@@ -13,6 +13,10 @@ object ShpiUtil {
         return shpi.length == 16 && shpi.startsWith('B')
     }
 
+    fun isSInvoice(shpi: String): Boolean {
+        return shpi.length == 16 && shpi.startsWith('S')
+    }
+
     fun isMjd(shpi: String): Boolean {
         return shpi.length == 29
     }
