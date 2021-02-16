@@ -1,19 +1,14 @@
 package kz.kazpost.loadingarea.repositories
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
+import androidx.paging.PagingState
 import kz.kazpost.loadingarea.api.TransportApi
-import kz.kazpost.loadingarea.ui._models.TransportModel
 import kz.kazpost.loadingarea.database.UserPreferences
 import kz.kazpost.loadingarea.repositories._mappers.TransportMappers
+import kz.kazpost.loadingarea.ui._models.TransportModel
 import kz.kazpost.loadingarea.ui.transport.TransportRepository
 import kz.kazpost.loadingarea.util.DateUtils
-import kz.kazpost.loadingarea.util.extentions.transformBody
-import okhttp3.ResponseBody
-import retrofit2.Response
+import retrofit2.HttpException
+import java.io.IOException
 import javax.inject.Inject
 
 class TransportRepositoryImpl @Inject constructor(
@@ -21,38 +16,46 @@ class TransportRepositoryImpl @Inject constructor(
     private val prefs: UserPreferences
 ) : TransportRepository {
 
-    override fun getTransportList(): Flow<Response<List<TransportModel>>> {
-        val userDepartmentId = prefs.userDepartmentId
-        return if (userDepartmentId.isNullOrBlank()) {
-            createNoDepartmentErrorResponse()
-        } else {
-            getTransportListFromServer(userDepartmentId)
-        }
+
+    override fun getTransportPagingSource(): TransportRepository.TransportPagingSource {
+        return TransportPagingSource()
     }
 
-    private fun getTransportListFromServer(userDepartmentId: String): Flow<Response<List<TransportModel>>> {
-        val yesterdayDate = DateUtils.getYesterdayDate()
-        return flow {
-            emit(
-                api.getTransportList(
+    inner class TransportPagingSource : TransportRepository.TransportPagingSource() {
+        private val userDepartmentId = prefs.userDepartmentId ?: "unknown user department"
+        private val yesterdayDate = DateUtils.getYesterdayDate()
+
+        override fun getRefreshKey(state: PagingState<Int, TransportModel>): Int? {
+            return null
+        }
+
+        override suspend fun load(params: LoadParams<Int>): LoadResult<Int, TransportModel> {
+            try {
+                // Start refresh at page 1 if undefined.
+                val nextPageNumber = params.key ?: 1
+                val response = api.getTransportList(
                     userDepartmentId,
-                    yesterdayDate
+                    yesterdayDate,
+                    nextPageNumber
                 )
-            )
-        }.map { response ->
-            response.transformBody {
-                TransportMappers.transportListResponseToTransportModelList(userDepartmentId, it!!)
-            }
-        }.flowOn(Dispatchers.IO)
-    }
+                val transportModelList = TransportMappers.transportListResponseToTransportModelList(
+                    userDepartmentId,
+                    response.body()?.transportList ?: emptyList()
+                )
 
-    private fun createNoDepartmentErrorResponse(): Flow<Response<List<TransportModel>>> =
-        flow {
-            emit(
-                Response.error<List<TransportModel>>(
-                    500,
-                    ResponseBody.create(null, "Logged in user has no department")
+                return LoadResult.Page(
+                    data = transportModelList,
+                    prevKey = if (nextPageNumber >= 2) nextPageNumber - 1 else null, // Only paging forward.
+                    nextKey = if (response.body()?.transportList?.size != 0) (nextPageNumber + 1) else null
                 )
-            )
+            } catch (e: IOException) {
+                // IOException for network failures.
+                return LoadResult.Error(e)
+            } catch (e: HttpException) {
+                // HttpException for any non-2xx HTTP status codes.
+                return LoadResult.Error(e)
+            }
         }
+
+    }
 }

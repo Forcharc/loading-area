@@ -6,19 +6,14 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ListPopupWindow.MATCH_PARENT
 import androidx.appcompat.widget.ListPopupWindow
-import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import kz.kazpost.loadingarea.R
 import kz.kazpost.loadingarea.databinding.ItemTransportBinding
 import kz.kazpost.loadingarea.ui._models.TransportModel
 
 class TransportAdapter(private val transportActionListener: TransportActionListener) :
-    RecyclerView.Adapter<TransportAdapter.TransportViewHolder>() {
-    private val listDiffer = AsyncListDiffer(this, TransportModel.TransportItemCallback())
-
-    fun submitList(list: List<TransportModel>) {
-        listDiffer.submitList(list)
-    }
+    PagingDataAdapter<TransportModel, TransportAdapter.TransportViewHolder>(TransportModel.TransportItemCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransportViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -27,11 +22,8 @@ class TransportAdapter(private val transportActionListener: TransportActionListe
     }
 
     override fun onBindViewHolder(holder: TransportViewHolder, position: Int) {
-        holder.bind(listDiffer.currentList[position])
-    }
-
-    override fun getItemCount(): Int {
-        return listDiffer.currentList.size
+        val item = getItem(position) ?: TransportModel(-1, "", "", "", "", emptyList(), 0)
+        holder.bind(item)
     }
 
     inner class TransportViewHolder(private val binding: ItemTransportBinding) :

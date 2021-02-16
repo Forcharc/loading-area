@@ -37,6 +37,7 @@
     <string name="exit">Выйти</string>
     <string name="yes">Да</string>
     <string name="do_you_want_to_exit">Вы уверены, что хотите выйти из аккаунта?</string>
+    <string name="retry_loading">Повторить загрузку</string>
 
     <string-array name="operations">
         <item>Добавить S</item>

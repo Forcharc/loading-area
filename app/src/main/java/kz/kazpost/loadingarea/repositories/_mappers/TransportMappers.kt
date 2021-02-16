@@ -2,15 +2,16 @@ package kz.kazpost.loadingarea.repositories._mappers
 
 import kz.kazpost.loadingarea.api._responses.ItineraryDTOEntryResponse
 import kz.kazpost.loadingarea.api._responses.TransportListResponse
+import kz.kazpost.loadingarea.api._responses.TransportResponse
 import kz.kazpost.loadingarea.ui._models.TransportModel
 import kz.kazpost.loadingarea.util.StringConstants
 
 object TransportMappers {
     fun transportListResponseToTransportModelList(
         currentDepartment: String,
-        response: TransportListResponse
+        transportList: List<TransportResponse>
     ): List<TransportModel> {
-        return response.transportList.map {
+        return transportList.map {
             TransportModel(
                 it.id ?: -1,
                 it.transportListId ?: StringConstants.stringUnknown,

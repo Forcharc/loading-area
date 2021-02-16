@@ -104,7 +104,7 @@ open class LoadingViewModel : ViewModel() {
             })
         }
 
-        private fun Fragment.showLoadingErrorSnackBar(
+        fun Fragment.showLoadingErrorSnackBar(
             errorMessage: String,
             retryAction: (() -> Unit)?
         ) {
@@ -125,7 +125,7 @@ open class LoadingViewModel : ViewModel() {
         }
 
 
-        private fun Fragment.updateProgressIndicator(isLoading: Boolean) {
+        fun Fragment.updateProgressIndicator(isLoading: Boolean) {
             // Just random
             val progressIndicatorId = 495391569
 

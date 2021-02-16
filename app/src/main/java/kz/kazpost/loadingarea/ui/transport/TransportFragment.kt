@@ -9,19 +9,27 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import kz.kazpost.loadingarea.R
-import kz.kazpost.loadingarea.base.LoadingViewModel.Companion.connectToLoadingViewModel
+import kz.kazpost.loadingarea.base.LoadingViewModel.Companion.showLoadingErrorSnackBar
+import kz.kazpost.loadingarea.base.LoadingViewModel.Companion.updateProgressIndicator
 import kz.kazpost.loadingarea.base.NavigateUpActivity
 import kz.kazpost.loadingarea.databinding.FragmentTransportBinding
+import kz.kazpost.loadingarea.ui._adapters.LoadStateAdapter
 import kz.kazpost.loadingarea.ui._adapters.TransportAdapter
 import kz.kazpost.loadingarea.ui._adapters.TransportAdapter.TransportActionType
 import kz.kazpost.loadingarea.ui._decorations.RecyclerViewItemMarginsDecoration
 import kz.kazpost.loadingarea.ui._models.TransportModel
+import kz.kazpost.loadingarea.util.StringConstants
 
 @AndroidEntryPoint
 class TransportFragment : Fragment(), TransportAdapter.TransportActionListener {
@@ -31,6 +39,13 @@ class TransportFragment : Fragment(), TransportAdapter.TransportActionListener {
     private val binding get() = _binding!!
     private val viewModel: TransportViewModel by viewModels()
     private val transportAdapter = TransportAdapter(this)
+
+    private val loadStateListener: (CombinedLoadStates) -> Unit = { loadStates ->
+        processPaginationLoading(loadStates)
+        processPaginationError(loadStates)
+        processPaginationNoItems(loadStates)
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,14 +67,52 @@ class TransportFragment : Fragment(), TransportAdapter.TransportActionListener {
 
         exitOnBackButtonPress()
 
-
         initViews()
 
-        initObservers()
+        initPaging()
+    }
 
-        viewModel.loadTransportList()
+    private fun initPaging() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.transportFlow.collectLatest { pagingData ->
+                transportAdapter.submitData(pagingData)
+            }
+        }
 
-        connectToLoadingViewModel(viewModel)
+        transportAdapter.addLoadStateListener(loadStateListener)
+    }
+
+    private fun processPaginationNoItems(loadStates: CombinedLoadStates) {
+        if (loadStates.refresh is LoadState.NotLoading && loadStates.append.endOfPaginationReached && transportAdapter.itemCount < 1) {
+            binding.layoutEmpty.root.isVisible = true
+            binding.rvTransports.isGone = true
+        } else {
+            binding.layoutEmpty.root.isGone = true
+            binding.rvTransports.isVisible = true
+        }
+    }
+
+    private fun processPaginationLoading(loadStates: CombinedLoadStates) {
+        updateProgressIndicator(
+            loadStates.refresh is LoadState.Loading ||
+                    loadStates.append is LoadState.Loading ||
+                    loadStates.prepend is LoadState.Loading
+        )
+    }
+
+    private fun processPaginationError(loadStates: CombinedLoadStates) {
+        when {
+            loadStates.refresh is LoadState.Error -> showLoadStateError(loadStates.refresh as LoadState.Error)
+            loadStates.prepend is LoadState.Error -> showLoadStateError(loadStates.prepend as LoadState.Error)
+            loadStates.append is LoadState.Error -> showLoadStateError(loadStates.append as LoadState.Error)
+        }
+    }
+
+    private fun showLoadStateError(error: LoadState.Error) {
+        showLoadingErrorSnackBar(
+            (error).error.localizedMessage
+                ?: StringConstants.stringUnknown, null
+        )
     }
 
     private fun exitOnBackButtonPress() {
@@ -102,21 +155,13 @@ class TransportFragment : Fragment(), TransportAdapter.TransportActionListener {
             .show()
     }
 
-    private fun initObservers() {
-        viewModel.transportLiveData.observe(viewLifecycleOwner) {
-            if (!it.isNullOrEmpty()) {
-                transportAdapter.submitList(it)
-                binding.layoutEmpty.root.isGone = true
-            } else {
-                transportAdapter.submitList(emptyList())
-                binding.layoutEmpty.root.isVisible = true
-            }
-        }
-    }
 
     private fun initViews() {
         binding.rvTransports.apply {
-            adapter = transportAdapter
+            adapter = transportAdapter.withLoadStateHeaderAndFooter(
+                LoadStateAdapter(transportAdapter::retry),
+                LoadStateAdapter(transportAdapter::retry)
+            )
             layoutManager = LinearLayoutManager(requireContext())
             setHasFixedSize(true)
 
@@ -134,7 +179,7 @@ class TransportFragment : Fragment(), TransportAdapter.TransportActionListener {
         }
 
         binding.swipeRefreshLayout.setOnRefreshListener {
-            viewModel.loadTransportList()
+            transportAdapter.refresh()
             binding.swipeRefreshLayout.isRefreshing = false
         }
     }
@@ -143,6 +188,7 @@ class TransportFragment : Fragment(), TransportAdapter.TransportActionListener {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        transportAdapter.removeLoadStateListener(loadStateListener)
     }
 
     override fun onTransportAction(
@@ -187,7 +233,7 @@ class TransportFragment : Fragment(), TransportAdapter.TransportActionListener {
         Log.d(TAG, "onOptionsItemSelected: ${item.itemId}")
         return when (item.itemId) {
             R.id.item_update -> {
-                viewModel.loadTransportList()
+                transportAdapter.refresh()
                 true
             }
             R.id.item_exit -> {
