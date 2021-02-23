@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kz.kazpost.loadingarea.R
 import kz.kazpost.loadingarea.base.LoadingViewModel
+import kz.kazpost.loadingarea.ui._models.MissingShpisModel
 import kz.kazpost.loadingarea.ui._models.ParcelCategoryModel
 import kz.kazpost.loadingarea.util.EventWrapper
 import kz.kazpost.loadingarea.util.ShpiUtil.isBInvoice
@@ -33,8 +34,8 @@ class ScanViewModel @Inject constructor(private val repository: ScanRepository) 
     private val _clearShpiLiveData = MutableLiveData<EventWrapper<Boolean>>()
     val clearShpiLiveData: LiveData<EventWrapper<Boolean>> = _clearShpiLiveData
 
-    private val _verifyErrorLiveData = MutableLiveData<EventWrapper<ErrorMessageWithRetryAction>>()
-    val verifyErrorLiveData: LiveData<EventWrapper<ErrorMessageWithRetryAction>> = _verifyErrorLiveData
+    private val _missingShpisLiveData = MutableLiveData<EventWrapper<MissingShpisModel>>()
+    val missingShpisLiveData: LiveData<EventWrapper<MissingShpisModel>> = _missingShpisLiveData
 
     fun init(index: Int, tInvoiceNumber: String, tInvoiceId: Int) {
         this.index = index
@@ -126,11 +127,24 @@ class ScanViewModel @Inject constructor(private val repository: ScanRepository) 
 
     fun confirmParcels() {
         val factParcels = getFactParcelShpis()
-        val result = loadFlow(repository.verifyThatAllParcelsAreIncluded(factParcels, tInvoiceId, index, tInvoiceNumber), errorReceivingLiveData = _verifyErrorLiveData)
+        val result = loadFlow(
+            repository.verifyThatAllParcelsAreIncluded(
+                factParcels,
+                tInvoiceId,
+                index,
+                tInvoiceNumber
+            )
+        )
         _scanSuccessLiveData.addSource(result) {
-            if (it == true) {
-                showMessageStringResource(R.string.scan_success)
-                _scanSuccessLiveData.postValue(true)
+            it?.let {
+                if (!it.hasMissingShpis()) {
+                    showMessageStringResource(R.string.scan_success)
+                    _scanSuccessLiveData.postValue(true)
+                } else {
+                    _missingShpisLiveData.postValue(
+                        EventWrapper(it)
+                    )
+                }
             }
             _scanSuccessLiveData.removeSource(result)
         }

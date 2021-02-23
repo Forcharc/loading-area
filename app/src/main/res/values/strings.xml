@@ -43,6 +43,7 @@
     <string name="did_not_add_s_invoices">Ошибка. Не удалось добавить S-накладные</string>
     <string name="shpi_added">%1$s выделен</string>
     <string name="s_invoice_not_found">S-накладная не найдена</string>
+    <string name="shpis_missing">"Важно!!! Данные отправления\n%1$s\nявляются частью транспортной накладной: %2$s"</string>
 
     <string-array name="operations">
         <item>Добавить S</item>

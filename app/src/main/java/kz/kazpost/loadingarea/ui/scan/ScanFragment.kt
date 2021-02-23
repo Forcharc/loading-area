@@ -17,6 +17,7 @@ import kz.kazpost.loadingarea.R
 import kz.kazpost.loadingarea.base.LoadingViewModel.Companion.connectToLoadingViewModel
 import kz.kazpost.loadingarea.databinding.FragmentScanBinding
 import kz.kazpost.loadingarea.ui._adapters.ParcelCategoryAdapter
+import kz.kazpost.loadingarea.ui._models.MissingShpisModel
 import kz.kazpost.loadingarea.util.EventObserver
 
 @AndroidEntryPoint
@@ -83,8 +84,8 @@ class ScanFragment : Fragment() {
             if (it) binding.etShpi.setText("")
         })
 
-        viewModel.verifyErrorLiveData.observe(viewLifecycleOwner, EventObserver { error ->
-            showErrorDialog(error.errorMessage)
+        viewModel.missingShpisLiveData.observe(viewLifecycleOwner, EventObserver { missingShpis ->
+            showMissingShpisDialog(missingShpis)
         })
 
         viewModel.scanSuccessLiveData.observe(viewLifecycleOwner) {
@@ -94,10 +95,16 @@ class ScanFragment : Fragment() {
         }
     }
 
-    private fun showErrorDialog(message: String) {
+    private fun showMissingShpisDialog(missingShpisModel: MissingShpisModel) {
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.error)
-            .setMessage(message)
+            .setMessage(
+                getString(
+                    R.string.shpis_missing,
+                    missingShpisModel.missingShpis.joinToString(separator = ",\n"),
+                    missingShpisModel.tInvoiceNumber
+                )
+            )
             .setNegativeButton(R.string.cancel) { dialog, _ ->
                 dialog.dismiss()
             }

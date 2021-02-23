@@ -15,6 +15,7 @@ import kz.kazpost.loadingarea.api._responses.MailResponse
 import kz.kazpost.loadingarea.database.AddedShpisDao
 import kz.kazpost.loadingarea.database.UserPreferences
 import kz.kazpost.loadingarea.database._db_models.AddedShpisDBModel
+import kz.kazpost.loadingarea.ui._models.MissingShpisModel
 import kz.kazpost.loadingarea.ui._models.ParcelCategoryModel
 import kz.kazpost.loadingarea.ui.scan.ScanRepository
 import kz.kazpost.loadingarea.util.StringConstants
@@ -116,7 +117,7 @@ class ScanRepositoryImpl @Inject constructor(
         tInvoiceId: Int,
         index: Int,
         tInvoiceNumber: String
-    ): Flow<Response<Boolean>> {
+    ): Flow<Response<MissingShpisModel>> {
         val request =
             VerifyThatAllParcelsIncludedRequest(
                 factParcels,
@@ -135,7 +136,8 @@ class ScanRepositoryImpl @Inject constructor(
 */
                     }
                 }
-                it?.isSuccessful() == true
+                if (it?.isSuccessful() == true) MissingShpisModel(emptyList(), tInvoiceNumber)
+                else MissingShpisModel(it?.missingShpis?.filterNotNull() ?: emptyList(), tInvoiceNumber)
             }
         }.flowOn(Dispatchers.IO)
     }
