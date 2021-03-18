@@ -43,7 +43,7 @@ class ScanRepositoryImpl @Inject constructor(
                     putCategoriesFromLabelsIntoResult(info.labelItems, result)
                 }
                 if (info?.mailItems != null) {
-                    putCategoriesForMailsIntoResult(info.mailItems, result)
+                    putCategoriesFromMailsIntoResult(info.mailItems, result)
                 }
                 var rememberedShpis = emptyList<AddedShpisDBModel>()
                 runBlocking {
@@ -68,7 +68,7 @@ class ScanRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun putCategoriesForMailsIntoResult(
+    private fun putCategoriesFromMailsIntoResult(
         mailItems: List<MailResponse?>,
         result: HashMap<String, ParcelCategoryModel>
     ) {

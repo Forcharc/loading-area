@@ -11,13 +11,16 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kz.kazpost.loadingarea.R
 import kz.kazpost.loadingarea.base.LoadingViewModel.Companion.connectToLoadingViewModel
 import kz.kazpost.loadingarea.databinding.FragmentScanBinding
 import kz.kazpost.loadingarea.ui._adapters.ParcelCategoryAdapter
+import kz.kazpost.loadingarea.ui._adapters.ParcelCategoryOverallAdapter
 import kz.kazpost.loadingarea.ui._models.MissingShpisModel
+import kz.kazpost.loadingarea.ui._models.ParcelTypeOverallModel
 import kz.kazpost.loadingarea.util.EventObserver
 
 @AndroidEntryPoint
@@ -29,6 +32,7 @@ class ScanFragment : Fragment() {
     private val viewModel: ScanViewModel by viewModels()
 
     private val categoryAdapter = ParcelCategoryAdapter()
+    private val categoryOverallAdapter = ParcelCategoryOverallAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,7 +59,7 @@ class ScanFragment : Fragment() {
         }
 
         binding.rvCategories.apply {
-            adapter = categoryAdapter
+            adapter = ConcatAdapter(categoryAdapter, categoryOverallAdapter)
             layoutManager = LinearLayoutManager(requireContext())
             setHasFixedSize(true)
         }
@@ -70,11 +74,16 @@ class ScanFragment : Fragment() {
     }
 
     private fun initObservers() {
-        viewModel.categoriesLiveData.observe(viewLifecycleOwner) {
-            if (!it.isNullOrEmpty()) {
-                categoryAdapter.submitList(it)
+        viewModel.categoriesLiveData.observe(viewLifecycleOwner) { parcelCategoryList ->
+            if (!parcelCategoryList.isNullOrEmpty()) {
+                categoryAdapter.submitList(parcelCategoryList)
+                categoryOverallAdapter.setModel(ParcelTypeOverallModel(
+                    parcelCategoryList.sumBy { it.planShpis.size },
+                    parcelCategoryList.sumBy { it.factShpis.size }
+                ))
                 binding.layoutEmpty.root.isGone = true
             } else {
+                categoryOverallAdapter.setModel(null)
                 categoryAdapter.submitList(emptyList())
                 binding.layoutEmpty.root.isVisible = true
             }
