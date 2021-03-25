@@ -6,7 +6,7 @@ object ShpiUtil {
     }
 
     fun isMail(shpi: String): Boolean {
-        return shpi.length == 13 && shpi.endsWith("KZ")
+        return shpi.length == 13 && shpi[0].isLetter() && shpi[1].isLetter() && shpi[12].isLetter() && shpi[11].isLetter()
     }
 
     fun isBInvoice(shpi: String): Boolean {
