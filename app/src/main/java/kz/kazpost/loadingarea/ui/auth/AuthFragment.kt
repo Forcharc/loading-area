@@ -1,6 +1,10 @@
 package kz.kazpost.loadingarea.ui.auth
 
 import android.os.Bundle
+import android.text.InputFilter
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -70,8 +74,39 @@ class AuthFragment : Fragment() {
             viewModel.authorize()
         }
 
-        binding.etLogin.doOnTextChanged { text, _, _, _ ->
-            viewModel.setLogin(text.toString())
+        binding.etLogin.apply {
+            doOnTextChanged { text, _, _, _ ->
+                viewModel.setLogin(text.toString())
+            }
+
+            // Transform uppercase letters to lower case
+            filters = arrayOf(object : InputFilter {
+                override fun filter(
+                    source: CharSequence,
+                    start: Int,
+                    end: Int,
+                    dest: Spanned?,
+                    dstart: Int,
+                    dend: Int
+                ): CharSequence? {
+                    for (i in start until end) {
+                        if (source[i].isUpperCase()) {
+                            val v = CharArray(end - start)
+                            TextUtils.getChars(source, start, end, v, 0)
+                            val s = String(v).toLowerCase()
+
+                            return if (source is Spanned) {
+                                val sp = SpannableString(s)
+                                TextUtils.copySpansFrom(source, start, end, null, sp, 0)
+                                sp
+                            } else {
+                                s
+                            }
+                        }
+                    }
+                    return null // keep original
+                }
+            })
         }
 
         binding.etPassword.doOnTextChanged { text, _, _, _ ->
