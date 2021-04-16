@@ -37,9 +37,13 @@ android {
             signingConfig signingConfigs.release
         }
         debug {
-//            applicationIdSuffix ".debug"
             debuggable true
             buildConfigField('String', 'BASE_URL', BASE_URL_DEBUG)
+            signingConfig signingConfigs.release
+        }
+        debug_aidana {
+            debuggable true
+            buildConfigField('String', 'BASE_URL', BASE_URL_AIDANA)
             signingConfig signingConfigs.release
         }
     }
