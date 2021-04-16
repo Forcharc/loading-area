@@ -19,15 +19,19 @@ class OneAndOnlyActivity : NavigateUpActivity() {
 
         binding = ActivityOneAndOnlyBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
         navController = navHostFragment.navController
-        setSupportActionBar(binding.toolbar)
 
         val appBarConfiguration =
             AppBarConfiguration(setOf(R.id.authFragment, R.id.transportFragment))
+
         binding.toolbar.setupWithNavController(navController, appBarConfiguration)
+
+        supportActionBar?.title = getString(R.string.authorization)
+        supportActionBar?.subtitle = getString(R.string.app_name)
     }
 
 

@@ -9,6 +9,7 @@ import androidx.lifecycle.OnLifecycleEvent
 import androidx.navigation.NavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
+import kz.kazpost.loadingarea.R
 
 open class NavigateUpActivity : AppCompatActivity() {
     private var backPressedCallback: OnBackButtonPressedCallback? = null
