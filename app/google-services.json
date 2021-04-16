@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "692571801941",
+    "project_id": "loading-area",
+    "storage_bucket": "loading-area.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:692571801941:android:643746ca35a19552abc7dc",
+        "android_client_info": {
+          "package_name": "kz.kazpost.loadingarea"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "692571801941-9tld2k0vrkotsfdoh106g5bs27u02o0j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnIooAO4NJRlWSxfXaDS1xeHcLYpFjWxk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "692571801941-9tld2k0vrkotsfdoh106g5bs27u02o0j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
