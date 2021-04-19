@@ -102,6 +102,12 @@ class ScanFragment : Fragment() {
                 navController.popBackStack()
             }
         }
+
+        viewModel.decoupleSuccessLiveData.observe(viewLifecycleOwner) {
+            if (it) {
+
+            }
+        }
     }
 
     private fun showMissingShpisDialog(missingShpisModel: MissingShpisModel) {
@@ -114,7 +120,11 @@ class ScanFragment : Fragment() {
                     missingShpisModel.tInvoiceNumber
                 )
             )
-            .setNegativeButton(R.string.cancel) { dialog, _ ->
+            .setNegativeButton(getString(R.string.decouple_missing)) { dialog, _ ->
+                dialog.dismiss()
+                viewModel.decoupleMissingParcelsFromTInvoice()
+            }
+            .setPositiveButton(R.string.continue_scan) { dialog, _ ->
                 dialog.dismiss()
             }
             .show()

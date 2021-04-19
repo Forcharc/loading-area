@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kz.kazpost.loadingarea.api.ScanApi
+import kz.kazpost.loadingarea.api._requests.DecoupleMissingParcelsRequest
+import kz.kazpost.loadingarea.api._requests.MailsAndLabelsWrapper
 import kz.kazpost.loadingarea.api._requests.VerifyThatAllParcelsIncludedRequest
 import kz.kazpost.loadingarea.api._responses.LabelItemResponse
 import kz.kazpost.loadingarea.api._responses.MailResponse
@@ -137,7 +139,28 @@ class ScanRepositoryImpl @Inject constructor(
                     }
                 }
                 if (it?.isSuccessful() == true) MissingShpisModel(emptyList(), tInvoiceNumber)
-                else MissingShpisModel(it?.missingShpis?.filterNotNull() ?: emptyList(), tInvoiceNumber)
+                else MissingShpisModel(
+                    it?.missingShpis?.filterNotNull() ?: emptyList(),
+                    tInvoiceNumber
+                )
+            }
+        }.flowOn(Dispatchers.IO)
+    }
+
+    override fun decoupleParcelsFromTInvoice(
+        missingParcels: List<String>,
+        tInvoiceNumber: String
+    ): Flow<Response<Boolean>> {
+        val request = DecoupleMissingParcelsRequest(
+            MailsAndLabelsWrapper(missingParcels),
+            tInvoiceNumber,
+            prefs.userLogin ?: "unknown"
+        )
+        return flow {
+            emit(api.decoupleMissingParcelsFromTInvoice(request))
+        }.map {
+            it.transformBody { resultResponse ->
+                resultResponse?.isSuccessful() ?: false
             }
         }.flowOn(Dispatchers.IO)
     }

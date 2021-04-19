@@ -31,6 +31,9 @@ class ScanViewModel @Inject constructor(private val repository: ScanRepository) 
     private val _scanSuccessLiveData = MediatorLiveData<Boolean>()
     val scanSuccessLiveData: LiveData<Boolean> = _scanSuccessLiveData
 
+    private val _decoupleSuccessLiveData = MediatorLiveData<Boolean>()
+    val decoupleSuccessLiveData: LiveData<Boolean> = _decoupleSuccessLiveData
+
     private val _clearShpiLiveData = MutableLiveData<EventWrapper<Boolean>>()
     val clearShpiLiveData: LiveData<EventWrapper<Boolean>> = _clearShpiLiveData
 
@@ -154,6 +157,27 @@ class ScanViewModel @Inject constructor(private val repository: ScanRepository) 
         val factParcelShpis = mutableListOf<String>()
         categoriesLiveData.value?.forEach { factParcelShpis.addAll(it.factShpis) }
         return factParcelShpis
+    }
+
+    fun decoupleMissingParcelsFromTInvoice() {
+        val result = loadFlow(
+            repository.decoupleParcelsFromTInvoice(
+                missingShpisLiveData.value?.peek()?.missingShpis ?: emptyList(),
+                tInvoiceNumber
+            )
+        )
+        _decoupleSuccessLiveData.addSource(result) {
+            it?.let {
+                if (it) {
+                    showMessageStringResource(R.string.decouple_scan_success)
+                    _decoupleSuccessLiveData.postValue(true)
+                    loadTInvoiceInfo()
+                }
+            }
+            _scanSuccessLiveData.removeSource(result)
+        }
+
+
     }
 
 }

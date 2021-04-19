@@ -1,5 +1,6 @@
 package kz.kazpost.loadingarea.util
 
+import kz.kazpost.loadingarea.BuildConfig
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -8,7 +9,11 @@ object DateUtils {
 
     fun getYesterdayDate(): String {
         val date = Calendar.getInstance()
-        date.add(Calendar.DATE, -1)
+        if (BuildConfig.DEBUG) {
+            date.add(Calendar.DATE, -30)
+        } else {
+            date.add(Calendar.DATE, -1)
+        }
         return dateFormat.format(date.time)
     }
 
