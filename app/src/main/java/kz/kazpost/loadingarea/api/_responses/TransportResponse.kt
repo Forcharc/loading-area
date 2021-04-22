@@ -10,6 +10,9 @@ data class TransportResponse(
     @field:SerializedName("modifyBy")
 	val modifyBy: String? = null,
 
+    @field:SerializedName("worker")
+    val worker: String? = null,
+
     @field:SerializedName("fromDepartment")
 	val fromDepartment: DepartmentResponse? = null,
 

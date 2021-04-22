@@ -1,13 +1,14 @@
 package kz.kazpost.loadingarea.repositories._mappers
 
 import kz.kazpost.loadingarea.api._responses.ItineraryDTOEntryResponse
-import kz.kazpost.loadingarea.api._responses.TransportListResponse
 import kz.kazpost.loadingarea.api._responses.TransportResponse
 import kz.kazpost.loadingarea.ui._models.TransportModel
+import kz.kazpost.loadingarea.ui._models.WorkerState
 import kz.kazpost.loadingarea.util.StringConstants
 
 object TransportMappers {
     fun transportListResponseToTransportModelList(
+        userLogin: String,
         currentDepartment: String,
         transportList: List<TransportResponse>
     ): List<TransportModel> {
@@ -19,7 +20,8 @@ object TransportMappers {
                 it.toDepartment?.longNameRu ?: StringConstants.stringUnknown,
                 it.flightDTO?.transportType ?: StringConstants.stringUnknown,
                 getNotYetVisitedDepartments(it.flightDTO?.itineraryDTO?.entries, currentDepartment),
-                it.currentIndex ?: -1
+                it.currentIndex ?: -1,
+                if (it.worker.isNullOrBlank()) WorkerState.NO_WORKER else if (it.worker == userLogin) WorkerState.RIGHT_WORKER else WorkerState.WRONG_WORKER
             )
         }
     }

@@ -48,6 +48,11 @@
     <string name="decouple_missing">Отвязать недостающие</string>
     <string name="decouple_scan_success">Отвязка проведена успешно</string>
     <string name="continue_scan">Продолжить сканирование</string>
+    <string name="error_wrong_user">Транспорт находится в обработке другим пользователем: %1$s</string>
+    <string name="error_wrong_department">Транспорт находится на другой станции</string>
+    <string name="error_wrong_status">Транспорт находится в пути</string>
+    <string name="error_wrong_t_invoice">Действие запрещено. Вам необходимо сначала отправить транспорт %1$s</string>
+
 
     <string-array name="operations">
         <item>Добавить S</item>

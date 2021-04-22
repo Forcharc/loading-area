@@ -40,7 +40,7 @@ class AddSInvoiceViewModel @Inject constructor(private val repository: SInvoiceR
 
     fun addSInvoicesToTInvoice(sInvoiceIds: List<Int>) {
         if (sInvoiceIds.isEmpty()) {
-            showMessageStringResource(R.string.no_checked_items)
+            showMessageStringResource(StringResource(R.string.no_checked_items))
         } else {
             val result = loadFlow(repository.addSInvoicesToTInvoice(sInvoiceIds, tInvoiceId))
             _addSInvoicesResultLiveData.addSource(result) {

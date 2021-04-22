@@ -2,7 +2,6 @@ package kz.kazpost.loadingarea.ui.transport
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isGone
@@ -20,6 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kz.kazpost.loadingarea.R
+import kz.kazpost.loadingarea.base.LoadingViewModel.Companion.connectToLoadingViewModel
 import kz.kazpost.loadingarea.base.LoadingViewModel.Companion.showLoadingErrorSnackBar
 import kz.kazpost.loadingarea.base.LoadingViewModel.Companion.updateProgressIndicator
 import kz.kazpost.loadingarea.base.NavigateUpActivity
@@ -29,6 +29,7 @@ import kz.kazpost.loadingarea.ui._adapters.TransportAdapter
 import kz.kazpost.loadingarea.ui._adapters.TransportAdapter.TransportActionType
 import kz.kazpost.loadingarea.ui._decorations.RecyclerViewItemMarginsDecoration
 import kz.kazpost.loadingarea.ui._models.TransportModel
+import kz.kazpost.loadingarea.util.EventObserver
 import kz.kazpost.loadingarea.util.StringConstants
 
 @AndroidEntryPoint
@@ -65,11 +66,49 @@ class TransportFragment : Fragment(), TransportAdapter.TransportActionListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        transportAdapter.refresh()
+
+        connectToLoadingViewModel(viewModel)
+
         exitOnBackButtonPress()
 
         initViews()
 
         initPaging()
+
+        initObservers()
+    }
+
+    private fun initObservers() {
+        viewModel.actionOnTInvoiceAllowed.observe(viewLifecycleOwner, EventObserver {
+            when (it.actionType) {
+                TransportActionType.ADD_S_INVOICE -> {
+                    navController.navigate(
+                        TransportFragmentDirections.actionTransportFragmentToAddSInvoiceFragment(
+                            it.transportModel.id,
+                            it.transportModel.tInvoiceNumber,
+                            it.transportModel.notYetVisitedDepartments.toTypedArray()
+                        )
+                    )
+                }
+                TransportActionType.REMOVE_S_INVOICE -> {
+                    navController.navigate(
+                        TransportFragmentDirections.actionTransportFragmentToRemoveSInvoiceFragment(
+                            it.transportModel.tInvoiceNumber
+                        )
+                    )
+                }
+                TransportActionType.LOAD_TRANSPORT -> {
+                    navController.navigate(
+                        TransportFragmentDirections.actionTransportFragmentToScanFragment(
+                            it.transportModel.index,
+                            it.transportModel.tInvoiceNumber,
+                            it.transportModel.id
+                        )
+                    )
+                }
+            }
+        })
     }
 
     private fun initPaging() {
@@ -195,33 +234,8 @@ class TransportFragment : Fragment(), TransportAdapter.TransportActionListener {
         transportModel: TransportModel,
         actionType: TransportActionType
     ) {
-        when (actionType) {
-            TransportActionType.ADD_S_INVOICE -> {
-                navController.navigate(
-                    TransportFragmentDirections.actionTransportFragmentToAddSInvoiceFragment(
-                        transportModel.id,
-                        transportModel.tInvoiceNumber,
-                        transportModel.notYetVisitedDepartments.toTypedArray()
-                    )
-                )
-            }
-            TransportActionType.REMOVE_S_INVOICE -> {
-                navController.navigate(
-                    TransportFragmentDirections.actionTransportFragmentToRemoveSInvoiceFragment(
-                        transportModel.tInvoiceNumber
-                    )
-                )
-            }
-            TransportActionType.LOAD_TRANSPORT -> {
-                navController.navigate(
-                    TransportFragmentDirections.actionTransportFragmentToScanFragment(
-                        transportModel.index,
-                        transportModel.tInvoiceNumber,
-                        transportModel.id
-                    )
-                )
-            }
-        }
+        viewModel.performTInvoiceAction(actionType, transportModel)
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

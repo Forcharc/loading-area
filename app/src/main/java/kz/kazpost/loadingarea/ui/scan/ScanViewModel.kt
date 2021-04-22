@@ -3,7 +3,10 @@ package kz.kazpost.loadingarea.ui.scan
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import kz.kazpost.loadingarea.R
 import kz.kazpost.loadingarea.base.LoadingViewModel
 import kz.kazpost.loadingarea.ui._models.MissingShpisModel
@@ -24,6 +27,15 @@ class ScanViewModel @Inject constructor(private val repository: ScanRepository) 
     private var tInvoiceId by Delegates.notNull<Int>()
     private var index by Delegates.notNull<Int>()
     private lateinit var tInvoiceNumber: String
+
+    private var isFirstSuccessfulScan: Boolean = true
+        get() = if (field) {
+            field = false
+            true
+        } else {
+            false
+        }
+
 
     private val _categoriesLiveData = MediatorLiveData<List<ParcelCategoryModel>>()
     val categoriesLiveData: LiveData<List<ParcelCategoryModel>> = _categoriesLiveData
@@ -62,15 +74,21 @@ class ScanViewModel @Inject constructor(private val repository: ScanRepository) 
             if (isShpiPresentInCategories(upperCaseShpi)) {
                 if (isShpiNotAdded(upperCaseShpi)) {
                     addShpiToCategories(upperCaseShpi)
+                    if (isFirstSuccessfulScan) {
+                        viewModelScope.launch {
+                            repository.setWorkerForTransport(tInvoiceNumber).collect { }
+                        }
+                    }
                 } else {
-                    showMessageStringResource(R.string.shpi_already_added)
+                    showMessageStringResource(StringResource(R.string.shpi_already_added))
                     _clearShpiLiveData.value = EventWrapper(true)
                 }
             } else {
-                showMessageStringResource(R.string.wrong_parcel)
+                showMessageStringResource(StringResource(R.string.wrong_parcel))
             }
         }
     }
+
 
     private fun addShpiToCategories(shpi: String) {
         val categories = categoriesLiveData.value
@@ -83,12 +101,12 @@ class ScanViewModel @Inject constructor(private val repository: ScanRepository) 
                 repository.rememberAddedParcel(shpi, tInvoiceNumber)
                 _categoriesLiveData.value = newCategories
                 _clearShpiLiveData.value = EventWrapper(true)
-                showMessageStringResource(R.string.successfully_added)
+                showMessageStringResource(StringResource(R.string.successfully_added))
             } else {
-                showMessageStringResource(R.string.error_try_again)
+                showMessageStringResource(StringResource(R.string.error_try_again))
             }
         } else {
-            showMessageStringResource(R.string.error_try_again)
+            showMessageStringResource(StringResource(R.string.error_try_again))
         }
     }
 
@@ -141,7 +159,7 @@ class ScanViewModel @Inject constructor(private val repository: ScanRepository) 
         _scanSuccessLiveData.addSource(result) {
             it?.let {
                 if (!it.hasMissingShpis()) {
-                    showMessageStringResource(R.string.scan_success)
+                    showMessageStringResource(StringResource(R.string.scan_success))
                     _scanSuccessLiveData.postValue(true)
                 } else {
                     _missingShpisLiveData.postValue(
@@ -169,7 +187,7 @@ class ScanViewModel @Inject constructor(private val repository: ScanRepository) 
         _decoupleSuccessLiveData.addSource(result) {
             it?.let {
                 if (it) {
-                    showMessageStringResource(R.string.decouple_scan_success)
+                    showMessageStringResource(StringResource(R.string.decouple_scan_success))
                     _decoupleSuccessLiveData.postValue(true)
                     loadTInvoiceInfo()
                 }

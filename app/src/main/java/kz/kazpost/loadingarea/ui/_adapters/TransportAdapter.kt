@@ -6,13 +6,17 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ListPopupWindow.MATCH_PARENT
 import androidx.appcompat.widget.ListPopupWindow
+import androidx.core.content.res.ResourcesCompat
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import kz.kazpost.loadingarea.R
 import kz.kazpost.loadingarea.databinding.ItemTransportBinding
 import kz.kazpost.loadingarea.ui._models.TransportModel
+import kz.kazpost.loadingarea.ui._models.WorkerState
 
-class TransportAdapter(private val transportActionListener: TransportActionListener) :
+class TransportAdapter(
+    private val transportActionListener: TransportActionListener
+) :
     PagingDataAdapter<TransportModel, TransportAdapter.TransportViewHolder>(TransportModel.TransportItemCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransportViewHolder {
@@ -22,7 +26,16 @@ class TransportAdapter(private val transportActionListener: TransportActionListe
     }
 
     override fun onBindViewHolder(holder: TransportViewHolder, position: Int) {
-        val item = getItem(position) ?: TransportModel(-1, "", "", "", "", emptyList(), 0)
+        val item = getItem(position) ?: TransportModel(
+            -1,
+            "",
+            "",
+            "",
+            "",
+            emptyList(),
+            0,
+            WorkerState.NO_WORKER
+        )
         holder.bind(item)
     }
 
@@ -39,6 +52,17 @@ class TransportAdapter(private val transportActionListener: TransportActionListe
 
         fun bind(transportModel: TransportModel) {
             currentTInvoice = transportModel
+
+            val color: Int = ResourcesCompat.getColor(
+                context.resources,
+                when (transportModel.workerState) {
+                    WorkerState.NO_WORKER -> R.color.white
+                    WorkerState.RIGHT_WORKER -> android.R.color.holo_green_light
+                    WorkerState.WRONG_WORKER -> android.R.color.holo_red_light
+                },
+                null
+            )
+            binding.card.setCardBackgroundColor(color)
 
             binding.tvTInvoiceNumber.text = transportModel.tInvoiceNumber
             binding.tvPassage.text =

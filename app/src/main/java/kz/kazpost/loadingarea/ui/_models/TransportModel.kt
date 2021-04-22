@@ -2,6 +2,10 @@ package kz.kazpost.loadingarea.ui._models
 
 import androidx.recyclerview.widget.DiffUtil
 
+enum class WorkerState() {
+    WRONG_WORKER, RIGHT_WORKER, NO_WORKER
+}
+
 data class TransportModel(
     val id: Int,
     val tInvoiceNumber: String,
@@ -10,7 +14,8 @@ data class TransportModel(
     val transportType: String,
     // Departments that transport will visit
     val notYetVisitedDepartments: List<String>,
-    val index: Int
+    val index: Int,
+    val workerState: WorkerState
 ) {
     class TransportItemCallback : DiffUtil.ItemCallback<TransportModel>() {
         override fun areItemsTheSame(oldItem: TransportModel, newItem: TransportModel): Boolean {

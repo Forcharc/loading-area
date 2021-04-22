@@ -1,6 +1,7 @@
 package kz.kazpost.loadingarea.api
 
 import kz.kazpost.loadingarea.api._requests.DecoupleMissingParcelsRequest
+import kz.kazpost.loadingarea.api._requests.SetWorkerForTransportRequest
 import kz.kazpost.loadingarea.api._requests.VerifyThatAllParcelsIncludedRequest
 import kz.kazpost.loadingarea.api._responses.GetTInvoiceInfoResponse
 import kz.kazpost.loadingarea.api._responses.ResultResponse
@@ -23,5 +24,10 @@ interface ScanApi {
     @Headers("Content-Type: application/json")
     @POST("exclude-mails-and-labellists-from-tls")
     suspend fun decoupleMissingParcelsFromTInvoice(@Body request: DecoupleMissingParcelsRequest): Response<ResultResponse>
+
+
+    @Headers("Content-Type: application/json")
+    @POST("set-worker-for-transport")
+    suspend fun setWorkerForTransport(@Body request: SetWorkerForTransportRequest): Response<ResultResponse>
 
 }

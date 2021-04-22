@@ -1,6 +1,7 @@
 package kz.kazpost.loadingarea.base
 
 import android.view.ViewGroup
+import androidx.annotation.StringRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.isGone
@@ -15,7 +16,7 @@ import kz.kazpost.loadingarea.util.EventObserver
 import kz.kazpost.loadingarea.util.EventWrapper
 import kz.kazpost.loadingarea.util.extentions.clickToDismissMode
 import kz.kazpost.loadingarea.util.extentions.makeBaseSnackBar
-import kz.kazpost.loadingarea.util.extentions.showSnackShort
+import kz.kazpost.loadingarea.util.extentions.showSnackLong
 import retrofit2.Response
 
 open class LoadingViewModel : ViewModel() {
@@ -27,8 +28,8 @@ open class LoadingViewModel : ViewModel() {
     val errorWithRetryActionLiveData: LiveData<EventWrapper<ErrorMessageWithRetryAction>> =
         _errorWithRetryActionLiveData
 
-    private val _errorStringResource = MutableLiveData<EventWrapper<Int>>()
-    val errorStringResource: LiveData<EventWrapper<Int>> = _errorStringResource
+    private val _errorStringResource = MutableLiveData<EventWrapper<StringResource>>()
+    val errorStringResource: LiveData<EventWrapper<StringResource>> = _errorStringResource
 
     enum class LoadingStatus {
         LOADING(),
@@ -40,8 +41,10 @@ open class LoadingViewModel : ViewModel() {
         val retryAction: (() -> Unit)?
     )
 
-    protected fun showMessageStringResource(errorMessageResourceId: Int) {
-        _errorStringResource.postValue(EventWrapper(errorMessageResourceId))
+    class StringResource(@StringRes val stringResourceId: Int, vararg val placeholders: Any)
+
+    protected fun showMessageStringResource(stringResource: StringResource) {
+        _errorStringResource.postValue(EventWrapper(stringResource))
     }
 
     protected fun <T> loadFlow(
@@ -100,7 +103,7 @@ open class LoadingViewModel : ViewModel() {
                 onLoading(it == LoadingStatus.LOADING)
             }
             viewModel.errorStringResource.observe(viewLifecycleOwner, EventObserver {
-                requireView().showSnackShort(getString(it))
+                requireView().showSnackLong(getString(it.stringResourceId, *it.placeholders))
             })
         }
 

@@ -11,6 +11,7 @@ import kotlinx.coroutines.runBlocking
 import kz.kazpost.loadingarea.api.ScanApi
 import kz.kazpost.loadingarea.api._requests.DecoupleMissingParcelsRequest
 import kz.kazpost.loadingarea.api._requests.MailsAndLabelsWrapper
+import kz.kazpost.loadingarea.api._requests.SetWorkerForTransportRequest
 import kz.kazpost.loadingarea.api._requests.VerifyThatAllParcelsIncludedRequest
 import kz.kazpost.loadingarea.api._responses.LabelItemResponse
 import kz.kazpost.loadingarea.api._responses.MailResponse
@@ -30,6 +31,27 @@ class ScanRepositoryImpl @Inject constructor(
     private val addedShpisDao: AddedShpisDao,
     private val prefs: UserPreferences
 ) : ScanRepository {
+
+    override fun setWorkerForTransport(
+        tInvoiceNumber: String
+    ): Flow<Response<Boolean>> {
+        return flow {
+            emit(
+                api.setWorkerForTransport(
+                    SetWorkerForTransportRequest(
+                        tInvoiceNumber,
+                        prefs.userLogin ?: "",
+                        prefs.userDepartmentId ?: ""
+                    )
+                )
+            )
+        }.map {
+            it.transformBody { resultResponse ->
+                resultResponse?.isSuccessful() == true
+            }
+        }
+    }
+
     override fun loadTInvoiceInfo(
         index: Int,
         tInvoiceNumber: String
