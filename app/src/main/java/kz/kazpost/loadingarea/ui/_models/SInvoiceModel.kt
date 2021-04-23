@@ -8,7 +8,8 @@ data class SInvoiceModel(
     val destination: String,
     val bagCount: Int,
     val parcelCount: Int,
-    val id: Int
+    val id: Int,
+    val weight: Int
 ) {
     class ItemCallback : DiffUtil.ItemCallback<SInvoiceModel>() {
         override fun areItemsTheSame(oldItem: SInvoiceModel, newItem: SInvoiceModel): Boolean {

@@ -12,7 +12,8 @@ object SInvoiceMappers {
             this.toDepartment?.longNameRu ?: StringConstants.stringUnknown,
             (this.totalNumberOfLabels ?: 0),
             this.totalNumberOfPLs ?: 0,
-            this.id ?: -1
+            this.id ?: -1,
+            this.totalWeight ?: 0
         )
     }
 }

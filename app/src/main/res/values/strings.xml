@@ -52,6 +52,7 @@
     <string name="error_wrong_department">Транспорт находится на другой станции</string>
     <string name="error_wrong_status">Транспорт находится в пути</string>
     <string name="error_wrong_t_invoice">Действие запрещено. Вам необходимо сначала отправить транспорт %1$s</string>
+    <string name="weight_kilos">Вес (кг)</string>
 
 
     <string-array name="operations">

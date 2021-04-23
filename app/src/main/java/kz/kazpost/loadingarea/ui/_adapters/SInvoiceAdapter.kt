@@ -80,6 +80,7 @@ class SInvoiceAdapter : RecyclerView.Adapter<SInvoiceAdapter.SInvoiceViewHolder>
 
             binding.tvNumber.text = sInvoiceModel.number
             binding.tvDestination.text = sInvoiceModel.destination
+            binding.tvWeight.text = String.format("%.1f", sInvoiceModel.weight.toFloat() / 1000f)
             binding.tvBagCount.text = sInvoiceModel.bagCount.toString()
             binding.tvParcelCount.text = sInvoiceModel.parcelCount.toString()
         }
