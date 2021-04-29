@@ -24,7 +24,7 @@ import kotlin.properties.Delegates
 class ScanViewModel @Inject constructor(private val repository: ScanRepository) :
     LoadingViewModel() {
 
-    private var tInvoiceId by Delegates.notNull<Int>()
+    private var tInvoiceId by Delegates.notNull<Long>()
     private var index by Delegates.notNull<Int>()
     private lateinit var tInvoiceNumber: String
 
@@ -52,7 +52,7 @@ class ScanViewModel @Inject constructor(private val repository: ScanRepository) 
     private val _missingShpisLiveData = MutableLiveData<EventWrapper<MissingShpisModel>>()
     val missingShpisLiveData: LiveData<EventWrapper<MissingShpisModel>> = _missingShpisLiveData
 
-    fun init(index: Int, tInvoiceNumber: String, tInvoiceId: Int) {
+    fun init(index: Int, tInvoiceNumber: String, tInvoiceId: Long) {
         this.index = index
         this.tInvoiceNumber = tInvoiceNumber
         this.tInvoiceId = tInvoiceId

@@ -138,7 +138,7 @@ class ScanRepositoryImpl @Inject constructor(
 
     override fun verifyThatAllParcelsAreIncluded(
         factParcels: List<String>,
-        tInvoiceId: Int,
+        tInvoiceId: Long,
         index: Int,
         tInvoiceNumber: String
     ): Flow<Response<MissingShpisModel>> {

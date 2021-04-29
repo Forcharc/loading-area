@@ -37,7 +37,7 @@
         tools:layout="@layout/fragment_add_s_invoice">
         <argument
             android:name="tInvoiceId"
-            app:argType="integer" />
+            app:argType="long" />
         <argument
             android:name="tInvoiceNumber"
             app:argType="string" />
@@ -67,7 +67,7 @@
             app:argType="string" />
         <argument
             android:name="tInvoiceId"
-            app:argType="integer" />
+            app:argType="long" />
     </fragment>
 
 

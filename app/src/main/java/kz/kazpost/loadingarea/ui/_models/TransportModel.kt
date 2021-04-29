@@ -7,7 +7,7 @@ enum class WorkerState() {
 }
 
 data class TransportModel(
-    val id: Int,
+    val id: Long,
     val tInvoiceNumber: String,
     val from: String,
     val to: String,

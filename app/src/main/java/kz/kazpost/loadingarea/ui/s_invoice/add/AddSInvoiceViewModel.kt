@@ -14,7 +14,7 @@ import kotlin.properties.Delegates
 @HiltViewModel
 class AddSInvoiceViewModel @Inject constructor(private val repository: SInvoiceRepository) :
     LoadingViewModel() {
-    private var tInvoiceId by Delegates.notNull<Int>()
+    private var tInvoiceId by Delegates.notNull<Long>()
     private lateinit var tInvoiceNumber: String
     private lateinit var notYetVisitedDepartments: List<String>
 
@@ -24,7 +24,7 @@ class AddSInvoiceViewModel @Inject constructor(private val repository: SInvoiceR
     private val _addSInvoicesResultLiveData = MediatorLiveData<EventWrapper<Boolean>>()
     val addSInvoicesResultLiveData: LiveData<EventWrapper<Boolean>> = _addSInvoicesResultLiveData
 
-    fun init(tInvoiceId: Int, tInvoiceNumber: String, notYetVisitedDepartments: List<String>) {
+    fun init(tInvoiceId: Long, tInvoiceNumber: String, notYetVisitedDepartments: List<String>) {
         this.tInvoiceId = tInvoiceId
         this.tInvoiceNumber = tInvoiceNumber
         this.notYetVisitedDepartments = notYetVisitedDepartments
@@ -38,7 +38,7 @@ class AddSInvoiceViewModel @Inject constructor(private val repository: SInvoiceR
         _sInvoiceListLiveData.observeOnce(result)
     }
 
-    fun addSInvoicesToTInvoice(sInvoiceIds: List<Int>) {
+    fun addSInvoicesToTInvoice(sInvoiceIds: List<Long>) {
         if (sInvoiceIds.isEmpty()) {
             showMessageStringResource(StringResource(R.string.no_checked_items))
         } else {

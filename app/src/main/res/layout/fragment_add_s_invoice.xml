@@ -34,10 +34,6 @@
 
         <TextView
             style="@style/TableCellStyle.Title"
-            android:text="@string/weight_kilos" />
-
-        <TextView
-            style="@style/TableCellStyle.Title"
             android:text="@string/bag_amount" />
 
         <TextView

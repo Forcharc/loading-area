@@ -7,7 +7,7 @@ data class VerifyThatAllParcelsIncludedRequest(
     val currentlyIncludedShpis: List<String>,
 
     @field:SerializedName(value = "id")
-    val tInvoiceId: Int,
+    val tInvoiceId: Long,
 
     @field:SerializedName(value = "department")
     val userDepartmentId: String,

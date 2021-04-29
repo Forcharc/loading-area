@@ -26,7 +26,7 @@ data class ItineraryDTOResponse(
     val transportType: String? = null,
 
     @field:SerializedName("id")
-    val id: Int? = null,
+    val id: Long? = null,
 
     @field:SerializedName("department")
     val department: DepartmentResponse? = null,

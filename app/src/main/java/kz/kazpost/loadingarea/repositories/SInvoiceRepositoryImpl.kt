@@ -56,8 +56,8 @@ class SInvoiceRepositoryImpl @Inject constructor(
 
 
     override fun addSInvoicesToTInvoice(
-        sInvoices: List<Int>,
-        tInvoiceId: Int
+        sInvoices: List<Long>,
+        tInvoiceId: Long
     ): Flow<Response<Boolean>> {
         val userLogin = userPreferences.userLogin
         if (userLogin != null) {

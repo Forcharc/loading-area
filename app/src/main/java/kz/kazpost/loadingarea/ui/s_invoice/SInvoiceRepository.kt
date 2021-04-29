@@ -8,6 +8,6 @@ interface SInvoiceRepository {
     fun getAvailableSInvoices(notYetVisitedDepartments: List<String>): Flow<Response<List<SInvoiceModel>>>
 
 
-    fun addSInvoicesToTInvoice(sInvoices: List<Int>, tInvoiceId: Int): Flow<Response<Boolean>>
+    fun addSInvoicesToTInvoice(sInvoices: List<Long>, tInvoiceId: Long): Flow<Response<Boolean>>
 
 }

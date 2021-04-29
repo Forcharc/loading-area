@@ -35,7 +35,7 @@ data class FlightDTOResponse(
 	val transportType: String? = null,
 
     @field:SerializedName("id")
-	val id: Int? = null,
+	val id: Long? = null,
 
     @field:SerializedName("department")
 	val department: DepartmentResponse? = null,

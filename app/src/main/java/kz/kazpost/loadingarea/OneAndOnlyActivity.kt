@@ -33,7 +33,7 @@ class OneAndOnlyActivity : NavigateUpActivity() {
         // For some reason app's name is present on start destination fragment's title, so we change title manually
         supportActionBar?.title = getString(R.string.authorization)
         // Show app name on app's every page (so that workers won't confuse apps)
-        supportActionBar?.subtitle = getString(R.string.app_name)
+        supportActionBar?.subtitle = getString(R.string.app_name) + " " + BuildConfig.VERSION_NAME + if (BuildConfig.DEBUG) " (test)" else ""
     }
 
 

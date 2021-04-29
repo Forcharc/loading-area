@@ -14,7 +14,7 @@ object TransportMappers {
     ): List<TransportModel> {
         return transportList.map {
             TransportModel(
-                it.id ?: -1,
+                it.id ?: -1L,
                 it.transportListId ?: StringConstants.stringUnknown,
                 it.fromDepartment?.longNameRu ?: StringConstants.stringUnknown,
                 it.toDepartment?.longNameRu ?: StringConstants.stringUnknown,

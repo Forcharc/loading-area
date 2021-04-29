@@ -16,12 +16,7 @@
     <TextView
         android:id="@+id/tv_destination"
         style="@style/TableCellStyle"
-        tools:text="Алматы" />
-
-    <TextView
-        android:id="@+id/tv_weight"
-        style="@style/TableCellStyle"
-        tools:text="9" />
+        tools:text="Алматы и еще очень очень много букв букв" />
 
     <TextView
         android:id="@+id/tv_bag_count"

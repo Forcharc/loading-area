@@ -50,7 +50,7 @@ data class TransportResponse(
 	val deliveryUser: String? = null,
 
     @field:SerializedName("id")
-	val id: Int? = null,
+	val id: Long? = null,
 
     @field:SerializedName("containsSForCurrentGroup")
 	val containsSForCurrentGroup: Boolean? = null,

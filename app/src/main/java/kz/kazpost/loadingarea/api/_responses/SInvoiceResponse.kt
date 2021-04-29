@@ -42,7 +42,7 @@ data class SInvoiceResponse(
     val totalWeight: Int? = null,
 
     @field:SerializedName("id")
-    val id: Int? = null,
+    val id: Long? = null,
 
     @field:SerializedName("totalNumberOfPLs")
     val totalNumberOfPLs: Int? = null,
