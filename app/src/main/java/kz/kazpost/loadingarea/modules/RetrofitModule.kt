@@ -43,8 +43,8 @@ class RetrofitModule {
 
         okHttpBuilder
             .addInterceptor(interceptor)
-            .readTimeout(60, TimeUnit.SECONDS)
-            .connectTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(5, TimeUnit.MINUTES)
+            .connectTimeout(5, TimeUnit.MINUTES)
             .build()
 
     } catch (e: Exception) {
@@ -61,6 +61,7 @@ class RetrofitModule {
                     chain: Array<X509Certificate>,
                     authType: String
                 ) {
+                    //Empty body
                 }
 
                 @SuppressLint("TrustAllX509TrustManager")
@@ -69,6 +70,7 @@ class RetrofitModule {
                     chain: Array<X509Certificate>,
                     authType: String
                 ) {
+                    //Empty body
                 }
 
                 override fun getAcceptedIssuers(): Array<X509Certificate> {
