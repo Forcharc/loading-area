@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.google.gson.JsonSyntaxException
 import kotlinx.coroutines.flow.*
 import kz.kazpost.loadingarea.R
 import kz.kazpost.loadingarea.util.EventObserver
@@ -17,7 +19,12 @@ import kz.kazpost.loadingarea.util.EventWrapper
 import kz.kazpost.loadingarea.util.extentions.clickToDismissMode
 import kz.kazpost.loadingarea.util.extentions.makeBaseSnackBar
 import kz.kazpost.loadingarea.util.extentions.showSnackLong
+import retrofit2.HttpException
 import retrofit2.Response
+import java.net.ConnectException
+import java.net.HttpURLConnection
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 open class LoadingViewModel : ViewModel() {
     private val _isLoadingLiveData = MutableLiveData<LoadingStatus>()
@@ -64,12 +71,12 @@ open class LoadingViewModel : ViewModel() {
                     throw Exception(it.errorBody()?.string()?.removeSurrounding("\""))
                 }
             }
-            .catch {
+            .catch { throwable ->
                 emit(null)
                 errorReceivingLiveData.postValue(
                     EventWrapper(
                         ErrorMessageWithRetryAction(
-                            it.localizedMessage ?: "Unknown error", onRetry
+                            getErrorMessage(throwable) ?: "Неизвестная ошибка", onRetry
                         )
                     )
                 )
@@ -78,6 +85,43 @@ open class LoadingViewModel : ViewModel() {
                 loadingStatusReceivingLiveData.postValue(LoadingStatus.NOT_LOADING)
             }
             .asLiveData()
+    }
+
+    private fun getErrorMessage(throwable: Throwable): String {
+        return when (throwable) {
+            is JsonSyntaxException -> {
+                FirebaseCrashlytics.getInstance().recordException(throwable)
+                "Ошибка обработки запроса"
+            }
+            is ConnectException -> {
+                "1: Проверьте подключение к интернету"
+            }
+            is UnknownHostException -> {
+                "2: Проверьте подключение к интернету"
+            }
+            is SocketTimeoutException -> {
+                "Сервер не отвечает"
+            }
+            is HttpException -> "${throwable.code()}: " +
+                    when (throwable.code()) {
+                        HttpURLConnection.HTTP_NOT_FOUND, HttpURLConnection.HTTP_BAD_REQUEST, HttpURLConnection.HTTP_FORBIDDEN -> {
+                            FirebaseCrashlytics.getInstance().recordException(throwable)
+                            throwable.response()?.errorBody()?.string()
+                        }
+                        HttpURLConnection.HTTP_GATEWAY_TIMEOUT -> {
+                            "Сервер временно недоступен. Попробуйте позднее."
+                        }
+                        HttpURLConnection.HTTP_INTERNAL_ERROR -> {
+                            "Внутренняя ошибка сервера"
+                        }
+                        else -> {
+                            throwable.response()?.errorBody()?.string()
+                        }
+                    }
+            else -> {
+                "Ошибка: \n" + throwable::class.java.simpleName + "\n" + throwable.localizedMessage
+            }
+        }
     }
 
 
@@ -96,14 +140,21 @@ open class LoadingViewModel : ViewModel() {
                 updateProgressIndicator(isLoading)
             }
         ) {
-            viewModel.errorWithRetryActionLiveData.observe(viewLifecycleOwner, EventObserver {
-                showLoadingErrorSnackBar(it.errorMessage, it.retryAction)
-            })
+            viewModel.errorWithRetryActionLiveData.observe(
+                viewLifecycleOwner,
+                EventObserver {
+                    showLoadingErrorSnackBar(it.errorMessage, it.retryAction)
+                })
             viewModel.isLoadingLiveData.observe(viewLifecycleOwner) {
                 onLoading(it == LoadingStatus.LOADING)
             }
             viewModel.errorStringResource.observe(viewLifecycleOwner, EventObserver {
-                requireView().showSnackLong(getString(it.stringResourceId, *it.placeholders))
+                requireView().showSnackLong(
+                    getString(
+                        it.stringResourceId,
+                        *it.placeholders
+                    )
+                )
             })
         }
 
@@ -133,7 +184,8 @@ open class LoadingViewModel : ViewModel() {
             val progressIndicatorId = 495391569
 
             val root = requireView() as ConstraintLayout
-            val progressIndicator: LinearProgressIndicator? = root.findViewById(progressIndicatorId)
+            val progressIndicator: LinearProgressIndicator? =
+                root.findViewById(progressIndicatorId)
             if (isLoading) {
                 if (requireView() is ConstraintLayout) {
                     if (progressIndicator == null) {

@@ -33,7 +33,6 @@ class AuthViewModel @Inject constructor(private val repository: AuthRepository) 
     fun authorize() {
         val resultLiveData = loadFlow(repository.authorizeUser(login, password))
         _authResultLiveData.addSource(resultLiveData) {
-            Log.d(TAG, "authorize: $it")
             _authResultLiveData.postValue(EventWrapper(it == true))
             _authResultLiveData.removeSource(resultLiveData)
         }
